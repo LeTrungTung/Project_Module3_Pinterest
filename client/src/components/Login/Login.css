@@ -1,0 +1,16 @@
+.divider:after,
+.divider:before {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #eee;
+}
+#btn-login {
+  text-align: center !important;
+  justify-content: center !important;
+}
+#id-title {
+  color: blueviolet;
+  text-align: left;
+  margin-bottom: 30px;
+}

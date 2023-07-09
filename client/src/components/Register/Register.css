@@ -3,85 +3,59 @@ body {
   margin: 0;
   padding: 0;
 }
-.register-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.wrap-header-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-header {
-  /* padding: 10px; */
-  margin: 0;
-  background-color: rgba(180, 214, 235, 0.572);
-  align-items: center;
-  padding-left: 50px;
-  text-align: left;
-}
-
-header img {
-  width: 100px;
-}
 
 .register-content {
+  /* min-height: 100vh; */
   flex-grow: 1;
   display: flex;
-  gap: 20px;
+  gap: 25px;
   align-items: center;
   text-align: center;
-  justify-content: space-around;
-  /* background-image: url(https://i.pinimg.com/236x/49/ae/26/49ae264c4f1f5e2231948168062b4172.jpg); */
+  justify-content: center;
   background-color: #31695679;
 }
 
-.nature-image {
-  width: 60%;
+.register-image {
+  /* width: 60%; */
+  width: 55%;
   align-items: center;
-
-  /* background-image: url(https://i.pinimg.com/236x/a0/45/f6/a045f676132af1a20bafe2b91a1f4f8f.jpg);
-  background-size: cover;*/
 }
-.nature-image img {
-  height: 580px;
+.register-image img {
+  height: 520px;
+  width: 100%;
   object-fit: cover;
-  /* display: block; */
   margin: auto;
   border-radius: 20px;
+  display: block;
 }
 
 .register-form {
-  margin-right: 100px;
+  /* margin-right: 100px; */
   border-radius: 20px;
-  width: 600px;
-  height: 580px;
-  display: flex;
-  /* row-gap: 12px; */
-  flex-direction: column;
-
-  flex-grow: 1;
+  width: 35%;
+  height: 520px;
   align-items: center;
   background-color: #f5f5f5;
+  background-image: url(https://i.pinimg.com/236x/38/69/eb/3869ebf095e0f9453267e5791bd7344f.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 form h2 {
-  margin-bottom: 20px;
+  /* margin-bottom: 5px; */
   color: #628f64;
 }
 
-form input {
+.register-form input {
   width: 80%;
   padding: 15px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  margin: 16px 0;
+  outline: none;
+  margin: 9px;
 }
 
-form button {
+.register-form button {
   width: 150px;
   padding: 10px;
   border: none;
@@ -93,31 +67,14 @@ form button {
   margin-top: 20px;
 }
 
-button:hover {
+.register button:hover {
   background-color: #45a049;
 }
 
-footer {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  margin-top: auto;
-}
-
-footer span {
-  margin-right: 10px;
-  cursor: pointer;
-}
-
-footer span:hover {
-  text-decoration: underline;
-}
-.error {
+.error-regis {
   color: red;
   text-align: left !important;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 0 40px;
   padding: 0;
 }

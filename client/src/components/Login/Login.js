@@ -1,35 +1,41 @@
 import React, { useState } from "react";
 import "./Login.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/userSlice";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate(); // Sử dụng hook useNavigate
-
-  const handleSubmit = (e) => {
+  const dipatch = useDispatch();
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Kiểm tra dữ liệu và xử lý đăng ký
-    const errors = {};
+    // const errors = {};
 
-    if (email.trim() === "") {
-      errors.email = "Vui lòng nhập email!";
-    } else if (!isValidEmail(email)) {
-      errors.email = "Email không đúng định dạng!";
-    }
+    // if (email.trim() === "") {
+    //   errors.email = "Vui lòng nhập email!";
+    // } else if (!isValidEmail(email)) {
+    //   errors.email = "Email không đúng định dạng!";
+    // }
 
-    if (password.trim() === "") {
-      errors.password = "Vui lòng nhập mật khẩu!";
-    }
+    // if (password.trim() === "") {
+    //   errors.password = "Vui lòng nhập mật khẩu!";
+    // }
 
-    if (Object.keys(errors).length === 0) {
-      // Nếu không có lỗi, chuyển hướng đến "/login"
-      navigate("/");
-    }
+    // if (Object.keys(errors).length === 0) {
+    //   // Nếu không có lỗi, chuyển hướng đến "/login"
+    //   navigate("/");
+    // }
 
-    setErrors(errors);
+    // setErrors(errors);
+    const data = await dipatch(
+      login({ username, password })
+    ).unwrap();
+    console.log(data);
   };
 
   const isValidEmail = (value) => {
@@ -49,10 +55,10 @@ const Login = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Đăng nhập</h2>
         <input
-          type="email"
+          type="text"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
         />
         {errors.email && <p className="error">{errors.email}</p>}
         <input

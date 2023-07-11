@@ -6,6 +6,7 @@ import Login from "./components/Login/Login";
 import Register_Login_Layout from "./layout/Register_Login_Layout/Register_Login_Layout";
 import CardImage from "./components/CardImage/CardImage";
 import DefaultLayout from "./layout/DefaultLayout/DefaultLayout";
+import DetailImageLayout from "./layout/DetailImageLayout/DetailImageLayout";
 
 function App() {
   const dataImage = [
@@ -81,51 +82,6 @@ function App() {
       author: "www.family.com",
       follow: 300,
     },
-    {
-      id: 9,
-      title: "animal",
-      description: "hổ rừng",
-      urlImage:
-        "https://i.pinimg.com/236x/08/8a/56/088a56efead402747100c15edb45cf8f.jpg",
-      author: "www.animation.com",
-      follow: 300,
-    },
-    {
-      id: 10,
-      title: "Funny",
-      description: "Girl in farm.",
-      urlImage:
-        "https://i.pinimg.com/236x/39/82/c7/3982c77f25e2cccf7f30913093a8ff9b.jpg",
-      author: "Living",
-      follow: 300,
-    },
-    {
-      id: 11,
-      title: "Funny",
-      description: "Girl in farm.",
-      urlImage:
-        "https://i.pinimg.com/564x/3a/39/5b/3a395ba2431b10e14c354c7b72c4324a.jpg",
-      author: "Living",
-      follow: 300,
-    },
-    {
-      id: 12,
-      title: "Funny",
-      description: "Girl in farm.",
-      urlImage:
-        "https://i.pinimg.com/236x/8d/7f/ca/8d7fca3e259a1d29c2cccd481afa5a53.jpg",
-      author: "nineliving.com",
-      follow: 300,
-    },
-    {
-      id: 13,
-      title: "Three Hero",
-      description: "anh hùng và tham quan",
-      urlImage:
-        "https://i.pinimg.com/236x/37/20/2a/37202a6d9487d9a5e5ed9b568256fb11.jpg",
-      author: "webtree.com",
-      follow: 300,
-    },
   ];
 
   return (
@@ -136,6 +92,7 @@ function App() {
           path="/home"
           element={<DefaultLayout dataImage={dataImage} />}
         />
+        <Route path="/detail/:id" element={<DetailImageLayout />} />
 
         <Route
           path="/login"

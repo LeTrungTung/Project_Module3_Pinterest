@@ -3,12 +3,12 @@ import axiosClient from "./axiosClient";
 export class UserAPI {
   // API đăng ký
   static register(param) {
-    const url = "/register";
+    const url = "/api/v1/user/register";
     return axiosClient.post(url, param);
   }
   //   API đăng nhập
   static login(param) {
-    const url = "/login";
+    const url = "/api/v1/user/login";
     return axiosClient.post(url, param);
   }
 

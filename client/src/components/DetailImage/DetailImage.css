@@ -1,10 +1,10 @@
 #wrap-detail {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  /* gap: 30px; */
   width: 80%;
   border: none;
-  padding: 25px 0 !important;
+  border-radius: 50px;
   margin-top: 100px;
   -webkit-box-shadow: 4px 5px 3px -1px rgba(147, 191, 170, 1);
   -moz-box-shadow: 4px 5px 3px -1px rgba(147, 191, 170, 1);
@@ -13,7 +13,7 @@
 #img-detail {
   border-top-left-radius: 50px;
   border-bottom-left-radius: 50px;
-  display: block;
+  /* display: block; */
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -48,7 +48,7 @@
 #top-right {
   display: flex;
   justify-content: space-between;
-  padding: 15px 10px 15px 0;
+  padding: 30px;
 }
 #right-area {
   /* flex: 35%; */
@@ -65,17 +65,27 @@
 }
 #bottom-comment {
   display: flex;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 15px;
   margin-bottom: 20px;
+  margin-left: 30px;
+  /* padding: 10px 30px 10px; */
   align-items: center;
 }
-#content-comment {
+#add-content-comment {
   border: none;
   background-color: #e1e1e1;
   border-radius: 40px;
   padding: 12px;
-  width: 80%;
+  width: 100%;
   position: relative;
+  outline: 1px solid #ccc;
+}
+#add-content-comment:focus {
+  background-color: #ffffff;
+  color: #000000; /* Màu chữ đen */
+  border: 1px solid #cccccc; /* Viền 1px, màu xám */
+  transition: background-color 0.3s ease; /* Hiệu ứng mượt mà */
 }
 #id-dot:hover,
 #id-arrowdown:hover {
@@ -103,7 +113,7 @@
   height: 35px;
   border-radius: 50%;
   border: none;
-  color: red;
+  color: rgb(179, 95, 95);
   /* padding: 5px; */
   font-size: 22px;
   position: absolute;
@@ -118,4 +128,167 @@
 .saved {
   color: white !important;
   background-color: black !important;
+}
+#id-source-img {
+  text-align: left;
+  padding-left: 30px;
+}
+#id-title-image {
+  text-align: left;
+  padding-left: 30px;
+}
+#id-count-comment {
+  text-align: left;
+  padding-left: 30px;
+}
+#userCreate-follow {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px;
+}
+#avatar-create-img {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+}
+#btn-follow {
+  padding: 15px 20px;
+  border-radius: 30px;
+  border: none;
+  font-weight: 600;
+  background-color: #afe5e7;
+}
+#avatar-create-img img {
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+#sp-username {
+  font-weight: 700;
+}
+#userCreate-follow-left {
+  display: flex;
+  column-gap: 10px;
+}
+#username-count-follow {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.show-comment {
+  display: flex;
+  column-gap: 10px;
+  margin-left: 30px;
+}
+.avatar-comment img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.view-comment {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.content-comment {
+  margin-left: 15px;
+}
+.view-comment b:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.action-comment {
+  display: flex;
+  column-gap: 30px;
+}
+.ans-comment {
+  font-weight: 600px;
+  color: grey;
+}
+.container,
+.container-fluid,
+.container-lg,
+.container-md,
+.container-sm,
+.container-xl,
+.container-xxl {
+  --bs-gutter-x: 0;
+}
+#you-think {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 30px;
+  border-top: 0.5px solid #ccc;
+  /* vertical-align: middle;
+  justify-items: center; */
+  align-items: center;
+}
+.emotion-image {
+  /* font-size: 40px; */
+  /* font-weight: 800; */
+  position: relative;
+  transition: all 2s ease;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.emotion-icon {
+  font-size: 40px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 50%;
+  background-color: #ccc;
+  transition: all 2s ease;
+}
+.emotion-image:hover .emotion-icon {
+  background-color: white;
+}
+
+.emotion-icons {
+  position: absolute;
+  top: -35px;
+  left: -80px;
+  display: flex;
+  gap: 10px;
+
+  padding: 5px 20px;
+  background-color: #fff;
+  border-radius: 50px;
+  border: none;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.heart-icon {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease;
+  color: goldenrod;
+  position: relative;
+}
+
+.thank-icon {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease;
+  color: rgb(59, 152, 206);
+}
+.heart-icon:hover,
+.thank-icon:hover {
+  transform: scale(1.5) translateY(-15px);
+}
+.icon-users {
+  font-size: 23px;
+  color: red;
+  line-height: 15px;
+}
+.count-icon-users {
+  font-size: 15px;
+  font-weight: 500;
+  align-items: center;
+}
+.icon-count {
+  display: flex;
+  align-content: center;
 }

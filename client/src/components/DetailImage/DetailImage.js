@@ -17,6 +17,7 @@ import axios from "axios";
 import { ClassNames } from "@emotion/react";
 // import DocumentAPI from "../../api/Document";
 import { ImageAPI } from "../../api/Image";
+import { CommentAPI } from "../../api/Comment";
 // import { handleCallDocumentAPI } from "../../redux/reducer/DocumentSlice";
 
 const DetailImage = () => {
@@ -26,8 +27,12 @@ const DetailImage = () => {
   console.log("id từ param", numberId);
   // const imageList = useSelector((state) => state.infoimage);
   const [imageList, setImageList] = useState([]);
+  // const [commentList, setCommentList] = useState([]);
+  const [loveCommentList, setLoveCommentList] = useState([]);
+  const [likeCommentList, setLikeCommentList] = useState([]);
   const [isCall, setIsCall] = useState(true);
-
+  const [isComment, setIsComment] = useState(true);
+  // gọi dữ liệu API images
   useEffect(() => {
     const fetchDataImage = async () => {
       try {
@@ -46,13 +51,41 @@ const DetailImage = () => {
     };
   }, [isCall]);
 
-  //  Gọi dữ liệu comment từ redux về
-  // const commentList = useSelector((state) => state.comments);
-  // console.log("cm,", commentList);
   const commentList = imageList.filter(
     (imageJoinComment) => imageJoinComment.imageCommentId === numberId
   );
   console.log("commentList", commentList);
+
+  // gọi dữ liệu API Comment lấy số lượt yêu thích "Love", "Like"
+  useEffect(() => {
+    const fetchDataComment = async () => {
+      try {
+        const response1 = await CommentAPI.getLoveComments();
+        const response2 = await CommentAPI.getLikeComments();
+        console.log("loveComment====>", response1.data.data);
+        console.log("likeComment====>", response2.data.data);
+        setLoveCommentList(response1.data.data);
+        setLikeCommentList(response2.data.data);
+      } catch (error) {
+        console.error("Error retrieving data: ", error);
+      }
+    };
+    if (isComment) {
+      fetchDataComment();
+    }
+    return () => {
+      setIsComment(false);
+    };
+  }, [isComment]);
+
+  //  Gọi dữ liệu comment từ redux về
+  // const commentList = useSelector((state) => state.comments);
+  // console.log("cm,", commentList);
+
+  // const arr1 = [1, 2, 3];
+  // const arr2 = [1, 2, 2,3,1,3,3];
+  // const arr3 = arr1.map(element => (arr2.filter(item=>item==element).length));
+  // console.log("ktra Ar",arr3)
 
   const imageViewDetail = imageList.find(
     (image) => image.idImage === numberId
@@ -60,6 +93,14 @@ const DetailImage = () => {
   console.log("imgList", imageList);
 
   const [comment, setComment] = useState("");
+
+  const loveByCommentList = commentList.map(
+    (comment) =>
+      loveCommentList.filter(
+        (love) => love.idComment == comment.idComment
+      ).length
+  );
+  console.log("Dem love của từng comment", loveByCommentList);
 
   const handleCommentChange = (e) => {
     setComment(e.target.value);
@@ -98,6 +139,7 @@ const DetailImage = () => {
     (imageJoinComment) => imageJoinComment.imageCommentId === numberId
   );
   console.log("countComments", countComments.length);
+  // đếm số lượng tim yêu thích của từng comment
 
   const handleHeartClick = async (id) => {
     const commentHeart = imageList.find(
@@ -246,29 +288,38 @@ const DetailImage = () => {
                       </span>
                     </div>
                     <div className="action-comment">
-                      <span>
-                        {/* {comment.timecreate} */}????Date tạo
-                      </span>
+                      <span>{comment.timecreate.slice(0, 10)}</span>
                       <span className="ans-comment">Trả lời</span>
                       <span>
-                        {/* {comment.heart > 0 ? (
+                        {/* đếm số lượt yêu thích */}
+                        {loveByCommentList[index] > 0 ? (
                           <AiFillHeart
                             id="id-heart"
-                            onClick={() => handleHeartClick(item.id)}
-                            className={item.heart > 0 ? "active" : ""}
+                            onClick={() =>
+                              handleHeartClick(comment.idComment)
+                            }
+                            className={
+                              loveByCommentList[index] > 0
+                                ? "active"
+                                : ""
+                            }
                           />
                         ) : (
                           <AiOutlineHeart
                             id="id-heart"
-                            onClick={() => handleHeartClick(item.id)}
+                            onClick={() =>
+                              handleHeartClick(comment.idComment)
+                            }
                           />
-                        )} */}
-                        <AiOutlineHeart
+                        )}
+                        {/* <AiOutlineHeart
                           id="id-heart"
                           onClick={() => handleHeartClick(comment.id)}
-                        />
+                        /> */}
                         {/* {comment.heart > 0 ? comment.heart : ""} */}
-                        ?số thả tim
+                        {loveByCommentList[index] > 0
+                          ? loveByCommentList[index]
+                          : ""}
                       </span>
                       <span>
                         <BsThreeDots id="id-dots" />

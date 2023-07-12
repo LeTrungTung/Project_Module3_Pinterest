@@ -22,7 +22,7 @@ class ImageController {
     }
   }
 
-  // lấy API bảng images JOIN bảng comment
+  // lấy API bảng images JOIN bảng comment VÀ users
   async handleGetAllImageComment(req, res) {
     try {
       // Execute the query to get all users

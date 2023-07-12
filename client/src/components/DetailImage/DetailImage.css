@@ -178,8 +178,9 @@
 }
 .show-comment {
   display: flex;
-  column-gap: 10px;
+  column-gap: 15px;
   margin-left: 30px;
+  padding-bottom: 15px;
 }
 .avatar-comment img {
   width: 40px;
@@ -213,7 +214,7 @@
 .container-sm,
 .container-xl,
 .container-xxl {
-  --bs-gutter-x: 0;
+  --bs-gutter-x: 0 !important;
 }
 #you-think {
   display: flex;

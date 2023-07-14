@@ -13,8 +13,11 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
 
-//database
+//
 
+//database
+//read public
+app.use('/public', express.static('public'));
 //router
 Routes(app);
 

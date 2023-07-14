@@ -5,21 +5,16 @@ const sql = require('../../libs/database/db');
 
 class ImageController {
   // lấy API bảng images
-  async handleGetAllImage(req, res) {
-    try {
-      // Execute the query to get all users
-      sql.query('SELECT * FROM images', (err, results) => {
-        if (err) {
-          console.error('Error handling get users:', err);
-          return res.status(500).json({ msg: 'Server error' });
-        }
-
-        res.status(200).json({ data: results });
-      });
-    } catch (error) {
-      console.error('Error handling get users:', error);
-      res.status(500).json({ msg: 'Server error' });
-    }
+  handleGetAllImage(req, res) {
+    // Execute the query to get all users
+    sql.query(`SELECT * FROM images`, (err, results) => {
+      if (err) {
+        console.error('Error handling get images:', err);
+        return res.status(500).json({ msg: 'Server error' });
+      }
+      console.log('data', results);
+      res.status(200).json({ data: results });
+    });
   }
 
   // lấy API bảng images JOIN bảng comment VÀ users
@@ -48,8 +43,8 @@ class ImageController {
     try {
       // Execute the query to get all users
       sql.query(
-        `select * from operation_image 
-        join images on images.idImage=operation_image.imageOperationId 
+        `select * from operation_image
+        join images on images.idImage=operation_image.imageOperationId
         join users on operation_image.userLoveImageId=users.idUser`,
         (err, results) => {
           if (err) {
@@ -67,8 +62,8 @@ class ImageController {
   async handleGetLikeImage(req, res) {
     try {
       sql.query(
-        `select * from operation_image 
-        join images on images.idImage=operation_image.imageOperationId 
+        `select * from operation_image
+        join images on images.idImage=operation_image.imageOperationId
         join users on operation_image.userLikeImageId=users.idUser`,
         (err, results) => {
           if (err) {

@@ -4,41 +4,46 @@ import Modal from "react-bootstrap/Modal";
 
 import React, { useState } from "react";
 import "./ModalForm.css";
-// import {
-//   getDownloadURL,
-//   getStorage,
-//   ref,
-//   uploadBytes,
-// } from "firebase/storage";
-// import { storage } from "../../../firebase";
-// import InfoImageAPI from "../../../api/InfoImage";
-// import { useDispatch } from "react-redux";
-// import { handleAddImageAPI } from "../../../redux/reducer/InfoImageSilce";
+import axios from "axios";
+import axiosClient from "../../api/axiosClient";
 
 function ModalForm(props) {
+  const [imgServer, setImgServer] = useState("");
   const [dataForm, setDataForm] = useState({
-    title: "",
+    userCreateId: "", //cập nhật thêm id của user tạo ảnh
+    titleImage: "",
     description: "",
-    author: "",
-    urlImage: null,
+    sourceImage: "",
+    categoryImage: "",
   });
 
-  // const dispatch = useDispatch();
   const handleClose = () => props.setShow(false);
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const dataFromPost = dataForm;
+    dataFromPost.linkImage = imgServer;
+    console.log(dataFromPost);
+    // tạo đường dẫn Post ảnh lên
 
-    // InfoImageAPI.addImage(dataForm)
-    //   .then((response) => {
-    //     console.log("Image sent successfully:", response.data);
-    //     // update lại dữ liệu từ DB về Redux
-    //     handleClose(); // Đóng ModalForm
-    //   })
-    //   .catch((error) => {
-    //     // Xử lý khi gửi bình luận gặp lỗi
-    //     console.error("Error sending comment:", error);
-    //   });
+    const newImage = {
+      userCreateId: 4,
+      linkImage: dataFromPost.linkImage,
+      categoryImage: dataFromPost.categoryImage,
+      titleImage: dataFromPost.titleImage,
+      description: dataFromPost.description,
+      sourceImage: dataFromPost.sourceImage,
+    };
+    axiosClient
+      .post("/api/v1/upload-image", newImage)
+      .then((response) => {
+        console.log(response.data);
+        // fetchData();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setDataForm((prevData) => ({
@@ -47,19 +52,24 @@ function ModalForm(props) {
     }));
   };
   const handleImageChange = (event) => {
-    // const file = event.target.files[0];
-    // if (!file) return;
-    // const storages = storage;
-    // const imgRefs = ref(storages, `images/${file.name}`);
-    // uploadBytes(imgRefs, file).then((snapshot) => {
-    //   getDownloadURL(snapshot.ref).then((url) => {
-    //     console.log("day la anh phai khong", url);
-    //     setDataForm((prevData) => ({
-    //       ...prevData,
-    //       urlImage: url,
-    //     }));
-    //   });
-    // });
+    const file = event.target.files[0];
+    if (!file) return;
+    // lấy hình ảnh được post lên bằng Multer
+    axiosClient({
+      method: "POST",
+      url: "/api/v1/upload-one",
+      data: { uploadImage: file },
+      headers: {
+        "Content-Type": "multipart/form-data; ",
+      },
+    })
+      .then((data) => {
+        console.log(data);
+        setImgServer(data.data.image);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -69,59 +79,99 @@ function ModalForm(props) {
           <Modal.Title>Tạo thêm hình ảnh</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={handleFormSubmit} id="id-form">
+          <Form
+            onSubmit={handleFormSubmit}
+            id="id-form"
+            // method="post"
+            // action="/api/v1/image-upload"
+          >
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlInput3"
+            >
+              <Form.Control
+                type="number"
+                placeholder="Id người dùng tạo ảnh"
+                autoFocus
+                name="userCreateId"
+                // value={dataForm?.titleImage}
+              />
+            </Form.Group>
+            {/* <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlInput2"
+            >
+              <Form.Control
+                type="text"
+                placeholder="Thể loại ảnh"
+                autoFocus
+                name="categoryImage"
+                value={dataForm?.categoryImage}
+              />
+            </Form.Group> */}
+
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlInput1"
             >
-              {/* <Form.Label>Tiêu đề ảnh</Form.Label> */}
+              <Form.Control
+                type="text"
+                placeholder="Thể loại ảnh"
+                autoFocus
+                name="categoryImage"
+                onChange={handleInputChange}
+                value={dataForm?.categoryImage}
+              />
+            </Form.Group>
+
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.ControlInput1"
+            >
               <Form.Control
                 type="text"
                 placeholder="Nhập tiêu đề ảnh"
                 autoFocus
-                name="title"
+                name="titleImage"
                 onChange={handleInputChange}
-                value={dataForm.title}
+                value={dataForm?.titleImage}
               />
             </Form.Group>
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
-              {/* <Form.Label>Mô tả ảnh</Form.Label> */}
               <Form.Control
                 as="textarea"
                 placeholder="Mô tả ảnh"
-                rows={2}
+                rows={1}
                 name="description"
                 onChange={handleInputChange}
-                value={dataForm.description}
+                value={dataForm?.description}
               />
             </Form.Group>
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
-              {/* <Form.Label>Nguồn gốc ảnh</Form.Label> */}
               <Form.Control
                 type="text"
                 placeholder="Nhập nguồn gốc ảnh"
                 autoFocus
-                name="author"
+                name="sourceImage"
                 onChange={handleInputChange}
-                value={dataForm.author}
+                value={dataForm?.sourceImage}
               />
             </Form.Group>
             <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlTextarea1"
             >
-              {/* <Form.Label>Chọn file ảnh</Form.Label> */}
               <Form.Control
                 type="file"
                 placeholder="Chọn file ảnh"
                 autoFocus
-                name="urlImage"
+                name="linkImage"
                 onChange={handleImageChange}
               />
             </Form.Group>

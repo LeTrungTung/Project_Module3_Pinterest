@@ -14,9 +14,11 @@ import ModalForm from "./ModalForm";
 // import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const HeaderOnLogin = () => {
+const HeaderOnLogin = ({ onSearchImage }) => {
   const [showModal, setShowModal] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchImage, setSearchImage] = useState("");
+
   const menuRef = useRef();
 
   const userLogin = JSON.parse(localStorage.getItem("user")) || [];
@@ -40,6 +42,11 @@ const HeaderOnLogin = () => {
   const handleArrowClick = () => {
     // setIsMenuOpen(!isMenuOpen);
     setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen);
+  };
+
+  const handleSearchImage = () => {
+    onSearchImage(searchImage);
+    console.log("value search", searchImage);
   };
 
   useEffect(() => {
@@ -90,13 +97,17 @@ const HeaderOnLogin = () => {
           md="4"
           xs="1"
         >
-          <BiSearchAlt2 id="icon-search" />
+          <BiSearchAlt2
+            id="icon-search"
+            onClick={handleSearchImage}
+          />
           <input
             type="search"
             placeholder="Search"
             id="ip-search"
-            // value={searchValue}
-            // onChange={(e) => setSearchValue(e.target.value)}
+            name="search-image"
+            value={searchImage}
+            onChange={(e) => setSearchImage(e.target.value)}
           />
         </Col>
         <Col lg="2" md="4" xs="6" id="right-header1">

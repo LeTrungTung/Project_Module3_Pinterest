@@ -56,7 +56,7 @@ const Register = () => {
       <div className="register-image">
         <img
           src="https://i.pinimg.com/736x/c5/92/13/c59213b89e9a0f60b25a705fa684c537.jpg"
-          alt="image"
+          alt="image1"
         />
       </div>
       <form className="register-form" onSubmit={handleSubmit}>

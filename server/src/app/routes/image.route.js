@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get('/get-image', ImageController.handleGetAllImage);
 router.get('/get-image-comment', ImageController.handleGetAllImageComment);
+router.get('/get-image-love', ImageController.handleGetLoveImage);
+router.get('/get-image-like', ImageController.handleGetLikeImage);
 
 router.get('/', (req, res) => {
   res.json('Ok');

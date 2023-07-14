@@ -13,7 +13,7 @@ export class UserAPI {
   }
 
   static getUsers() {
-    const url = "/users";
+    const url = "api/v1/user/get-user";
     return axiosClient.get(url);
   }
 }

@@ -47,6 +47,29 @@ class CommentController {
       res.status(500).json({ msg: 'Server error' });
     }
   }
+
+  // lấy API comments join với cá bảng khác users
+  async handleGetAllComment(req, res) {
+    try {
+      sql.query(
+        `select * from comments 
+        join images on images.idImage=comments.idComment 
+        join like_love_comment on like_love_comment.commentLikeLoveId=comments.idComment
+        join users on users.idUser=like_love_comment.userLikeCommentId or users.idUser=like_love_comment.userLoveCommentId`,
+        (err, results) => {
+          if (err) {
+            console.error('Error handling get comments:', err);
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      console.error('Error handling get users:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
 }
 
 module.exports = new CommentController();

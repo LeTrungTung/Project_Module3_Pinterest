@@ -42,6 +42,46 @@ class ImageController {
       res.status(500).json({ msg: 'Server error' });
     }
   }
+
+  // lấy API bảng images JOIN bảng operation_image VÀ users
+  async handleGetLoveImage(req, res) {
+    try {
+      // Execute the query to get all users
+      sql.query(
+        `select * from operation_image 
+        join images on images.idImage=operation_image.imageOperationId 
+        join users on operation_image.userLoveImageId=users.idUser`,
+        (err, results) => {
+          if (err) {
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
+  async handleGetLikeImage(req, res) {
+    try {
+      sql.query(
+        `select * from operation_image 
+        join images on images.idImage=operation_image.imageOperationId 
+        join users on operation_image.userLikeImageId=users.idUser`,
+        (err, results) => {
+          if (err) {
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
 }
 
 module.exports = new ImageController();

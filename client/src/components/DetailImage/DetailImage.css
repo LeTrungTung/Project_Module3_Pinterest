@@ -125,22 +125,23 @@
 .active {
   color: red !important;
 }
+#count-love-coment {
+  cursor: pointer;
+  margin-left: 3px;
+}
 .saved {
   color: white !important;
   background-color: black !important;
 }
-#id-source-img {
+#id-source-img,
+#id-title-image,
+#id-count-comment,
+#id-count-comment,
+#id-descrip-img {
   text-align: left;
   padding-left: 30px;
 }
-#id-title-image {
-  text-align: left;
-  padding-left: 30px;
-}
-#id-count-comment {
-  text-align: left;
-  padding-left: 30px;
-}
+
 #userCreate-follow {
   display: flex;
   justify-content: space-between;
@@ -207,6 +208,10 @@
   font-weight: 600px;
   color: grey;
 }
+.ans-heart {
+  display: flex;
+  align-items: center;
+}
 .container,
 .container-fluid,
 .container-lg,
@@ -228,7 +233,7 @@
 .emotion-image {
   /* font-size: 40px; */
   /* font-weight: 800; */
-  position: relative;
+  /* position: relative; */
   transition: all 2s ease;
   display: flex;
   align-items: center;
@@ -241,39 +246,66 @@
   padding: 8px;
   border-radius: 50%;
   background-color: #ccc;
-  transition: all 2s ease;
+  transition: background-color 0.3s ease; /* Hiệu ứng chuyển đổi màu */
 }
-.emotion-image:hover .emotion-icon {
-  background-color: white;
+.emotion-icon:hover {
+  color: darkred; /* Màu khi hover */
+  background-color: rgb(156, 156, 194); /* Màu nền khi hover */
 }
 
+#wrap-heart {
+  position: relative;
+}
 .emotion-icons {
   position: absolute;
-  top: -35px;
-  left: -80px;
+  top: -60px; /* Vị trí hiển thị phía trên */
+  left: -90px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+
   display: flex;
   gap: 10px;
-
   padding: 5px 20px;
   background-color: #fff;
   border-radius: 50px;
   border: none;
   box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
 }
+#wrap-heart:hover .emotion-icons {
+  visibility: visible;
+  opacity: 1;
+}
 
 .heart-icon {
-  width: 40px;
-  height: 40px;
+  /* width: 30px;
+  height: 30px; */
   transition: transform 0.3s ease;
   color: goldenrod;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+.heart-icon b,
+.thank-icon b {
+  font-size: 0.5em;
+  color: black;
 }
 
 .thank-icon {
-  width: 40px;
-  height: 40px;
+  /* width: 30px;
+  height: 30px; */
   transition: transform 0.3s ease;
   color: rgb(59, 152, 206);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
 }
 .heart-icon:hover,
 .thank-icon:hover {
@@ -292,4 +324,126 @@
 .icon-count {
   display: flex;
   align-content: center;
+}
+
+.render-user-operation {
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-around; */
+  border: 1px solid #ccc;
+  padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  background-color: white;
+  border-radius: 10px;
+  overflow-y: auto;
+  z-index: 999;
+}
+.render-user-operation p {
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+  padding-bottom: 10px;
+}
+.row-render-user {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  padding: 20px;
+}
+.number-operation {
+  cursor: pointer;
+  margin-left: 5px;
+}
+.biso-heart {
+  color: goldenrod;
+  font-size: 25px;
+}
+.biso-heart1 {
+  color: goldenrod;
+  font-size: 30px;
+}
+.biso-heart2 {
+  color: rgb(59, 152, 206);
+  font-size: 30px;
+}
+.tag-face {
+  color: rgb(59, 152, 206);
+  font-size: 25px;
+}
+.avatar-name {
+  display: flex;
+  align-items: center;
+}
+.avatar-name img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.wrap-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cl-nameuser {
+  font-weight: 400;
+  font-size: 1.1em;
+}
+/* ------------------------ */
+#wrap-love-comment {
+  position: relative;
+}
+.show-user-love {
+  position: absolute;
+  top: 30px; /* Vị trí hiển thị phía trên */
+  left: -90px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  width: 130px;
+  height: 120px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  padding: 5px 10px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+}
+#wrap-love-comment:hover .show-user-love {
+  visibility: visible;
+  opacity: 1;
+}
+.row-mini-love {
+  display: flex;
+  justify-content: space-between;
+}
+.row-mini-love img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.name-uselove {
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.heart-userlove {
+  background-color: white;
+  color: red;
+  padding: 3px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
 }

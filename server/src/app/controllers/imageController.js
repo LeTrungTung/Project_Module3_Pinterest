@@ -77,6 +77,49 @@ class ImageController {
       res.status(500).json({ msg: 'Server error' });
     }
   }
+
+  // lấy API bảng users JOIN bảng images
+  async handleGetImageCreatedByUserid(req, res) {
+    try {
+      sql.query(
+        `select * from users join images on images.userCreateId=users.idUser where users.idUser=${req.params.id}`,
+        (err, results) => {
+          if (err) {
+            console.error('Error handling get users-image:', err);
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      console.error('Error handling get users-image:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
+  // lấy API bảng users JOIN bảng images, images_saved_user
+  async handleGetImageSavedByUserid(req, res) {
+    try {
+      sql.query(
+        `select * from users 
+        join images_saved_user on images_saved_user.userSavedId=users.idUser
+        join images on images.idImage=images_saved_user.imageSavedId
+        where users.idUser=${req.params.id}`,
+        (err, results) => {
+          if (err) {
+            console.error('Error handling get users-image-save:', err);
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      console.error('Error handling get users-image-save:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
 }
 
 module.exports = new ImageController();

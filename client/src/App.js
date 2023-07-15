@@ -10,6 +10,9 @@ import DetailImageLayout from "./layout/DetailImageLayout/DetailImageLayout";
 import { ImageAPI } from "../src/api/Image";
 import { useEffect, useState } from "react";
 import RequiredAuth from "./components/RequireAuth";
+import HeaderOnLogin from "./components/Header/HeaderOnLogin";
+import Profile from "./components/profile/Profile";
+import ProfileLayout from "./layout/ProfileLayout/ProfileLayout";
 
 function App() {
   const [imageList, setImageList] = useState([]);
@@ -43,6 +46,8 @@ function App() {
             element={<DefaultLayout dataImage={imageList} />}
           />
           <Route path="/detail/:id" element={<DetailImageLayout />} />
+
+          <Route path="/profile" element={<ProfileLayout />} />
         </Route>
 
         <Route path="/" index element={<HomeInNotLogin />} />

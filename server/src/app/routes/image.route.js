@@ -9,6 +9,8 @@ router.get('/get-image', ImageController.handleGetAllImage);
 router.get('/get-image-comment', ImageController.handleGetAllImageComment);
 router.get('/get-image-love', ImageController.handleGetLoveImage);
 router.get('/get-image-like', ImageController.handleGetLikeImage);
+router.get('/get-image-user/:id', ImageController.handleGetImageCreatedByUserid);
+router.get('/get-image-user-save/:id', ImageController.handleGetImageSavedByUserid);
 
 router.get('/', (req, res) => {
   res.json('Ok');

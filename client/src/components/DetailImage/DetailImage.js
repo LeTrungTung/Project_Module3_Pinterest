@@ -208,7 +208,6 @@ const DetailImage = () => {
     setComment(e.target.value);
   };
   const userLogin = JSON.parse(localStorage.getItem("user")) || [];
-  console.log("login", userLogin);
   // const dispatch = useDispatch();
   const handleAddComment = () => {
     // if (comment.trim() !== "") {

@@ -17,4 +17,12 @@ export class ImageAPI {
     const url = "/api/v1/image/get-image-like";
     return axiosClient.get(url);
   }
+  static getUsersCreateImage(id) {
+    const url = `/api/v1/image/get-image-user/${id}`;
+    return axiosClient.get(url);
+  }
+  static getUsersSaveImage(id) {
+    const url = `/api/v1/image/get-image-user-save/${id}`;
+    return axiosClient.get(url);
+  }
 }

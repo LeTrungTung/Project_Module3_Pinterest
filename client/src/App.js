@@ -9,6 +9,7 @@ import DefaultLayout from "./layout/DefaultLayout/DefaultLayout";
 import DetailImageLayout from "./layout/DetailImageLayout/DetailImageLayout";
 import { ImageAPI } from "../src/api/Image";
 import { useEffect, useState } from "react";
+import RequiredAuth from "./components/RequireAuth";
 
 function App() {
   const [imageList, setImageList] = useState([]);
@@ -36,12 +37,15 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        <Route element={<RequiredAuth />}>
+          <Route
+            path="/home"
+            element={<DefaultLayout dataImage={imageList} />}
+          />
+          <Route path="/detail/:id" element={<DetailImageLayout />} />
+        </Route>
+
         <Route path="/" index element={<HomeInNotLogin />} />
-        <Route
-          path="/home"
-          element={<DefaultLayout dataImage={imageList} />}
-        />
-        <Route path="/detail/:id" element={<DetailImageLayout />} />
 
         <Route
           path="/login"

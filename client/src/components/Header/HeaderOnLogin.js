@@ -21,14 +21,16 @@ const HeaderOnLogin = ({ onSearchImage }) => {
 
   const menuRef = useRef();
 
-  const userLogin = JSON.parse(localStorage.getItem("user")) || [];
+  const userLogin =
+    JSON.parse(localStorage.getItem("userLogin")) || [];
+  console.log("user login", userLogin?.avatarUser);
   const navigate = useNavigate();
   // const dispatch = useDispatch();
 
   // Logout
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userLogin");
     window.location.href = "/";
   };
 
@@ -111,26 +113,80 @@ const HeaderOnLogin = ({ onSearchImage }) => {
           />
         </Col>
         <Col lg="2" md="4" xs="6" id="right-header1">
-          <BsBellFill className="cl-hover" id="bell" />
-          <AiFillMessage className="cl-hover" id="message" />
-          <img
-            src="https://cdn.onlinewebfonts.com/svg/img_542942.png"
-            alt="avatar"
-            className="cl-hover"
-            id="avatar"
-          />
-          <IoIosArrowDown
-            id="arrow-avatar"
-            onClick={handleArrowClick}
-            className={isMenuOpen ? "open" : ""}
-          />
-          {isMenuOpen && (
-            <div className="menu-dropdown" ref={menuRef}>
-              <span className="logout" onClick={handleLogout}>
-                Đăng xuất
-              </span>
+          <div className="wrap-avata-hover">
+            <BsBellFill className="cl-hover" id="bell" />
+            <div className="view-hover-avatar">
+              <span>Thông báo</span>
             </div>
-          )}
+          </div>
+          <div className="wrap-avata-hover">
+            <AiFillMessage className="cl-hover" id="message" />
+            <div className="view-hover-avatar">
+              <span>Tin nhắn</span>
+            </div>
+          </div>
+          <div className="wrap-avata-hover">
+            {userLogin?.avatarUser == null ? (
+              <img
+                src="https://cdn.onlinewebfonts.com/svg/img_542942.png"
+                alt="avatar"
+                className="cl-hover"
+                id="avatar"
+              />
+            ) : (
+              <img
+                src={userLogin?.avatarUser}
+                alt="avatar"
+                className="cl-hover"
+                id="avatar"
+              />
+            )}
+            <div className="view-hover-avatar">
+              <span>Hồ sơ của bạn</span>
+            </div>
+          </div>
+          <div className="wrap-avata-hover">
+            <IoIosArrowDown
+              id="arrow-avatar"
+              onClick={handleArrowClick}
+              className={isMenuOpen ? "open" : ""}
+            />
+            <div className="view-hover-avatar">
+              <span>Chi tiết tài khoản</span>
+            </div>
+            {isMenuOpen && (
+              <div className="menu-dropdown" ref={menuRef}>
+                <span className="profile-logout1">
+                  Đang đăng nhập
+                </span>
+                <div className="row-avataemail-name1 hoverto">
+                  {userLogin?.avatarUser == null ? (
+                    <img
+                      src="https://png.pngtree.com/png-clipart/20190705/original/pngtree-vector-business-man-icon-png-image_4239598.jpg"
+                      alt="avata"
+                      className="avata-of"
+                    />
+                  ) : (
+                    <img
+                      src={userLogin?.avatarUser}
+                      alt="avata"
+                      className="avata-of"
+                    />
+                  )}
+                  <div className="email-name1">
+                    <span>{userLogin?.username}</span>
+                    <span>{userLogin?.email}</span>
+                  </div>
+                </div>
+                <span
+                  className="profile-logout hoverto"
+                  onClick={handleLogout}
+                >
+                  Đăng xuất
+                </span>
+              </div>
+            )}
+          </div>
         </Col>
       </Row>
     </Container>

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import "./Register.css";
 import { NavLink, useNavigate } from "react-router-dom";
+import { register } from "../../store/registerSlice";
+import { useDispatch } from "react-redux";
 
 const Register = () => {
+  const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,8 +46,16 @@ const Register = () => {
     }
 
     setErrors(errors);
-  };
 
+    // Gửi dữ liệu đăng ký
+    const data = {
+      username: username,
+      email: email,
+      password: password,
+      // confirmPassword: confirmPassword,
+    };
+    dispatch(register(data));
+  };
   const isValidEmail = (value) => {
     // Kiểm tra định dạng email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

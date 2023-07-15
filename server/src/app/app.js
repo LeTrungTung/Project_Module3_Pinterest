@@ -11,6 +11,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(helmet());
+
+// var corsOptions = {
+//   origin: 'http://localhost:3000',
+//   credentials: true, //access-control-allow-credentials:true
+//   optionSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
 app.use(cors());
 
 //

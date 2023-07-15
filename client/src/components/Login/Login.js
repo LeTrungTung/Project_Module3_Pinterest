@@ -6,6 +6,7 @@ import { login } from "../../store/userSlice";
 
 const Login = () => {
   const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -13,29 +14,32 @@ const Login = () => {
   const dipatch = useDispatch();
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const data = await dipatch(login({ email, password })).unwrap();
+    console.log(data);
+    if (data.data.accessToken) {
+      navigate("/home");
+    }
+
     // Kiểm tra dữ liệu và xử lý đăng ký
-    // const errors = {};
+    const errors = {};
 
-    // if (email.trim() === "") {
-    //   errors.email = "Vui lòng nhập email!";
-    // } else if (!isValidEmail(email)) {
-    //   errors.email = "Email không đúng định dạng!";
-    // }
+    if (email.trim() === "") {
+      errors.email = "Vui lòng nhập email!";
+    } else if (!isValidEmail(email)) {
+      errors.email = "Email không đúng định dạng!";
+    }
 
-    // if (password.trim() === "") {
-    //   errors.password = "Vui lòng nhập mật khẩu!";
-    // }
+    if (password.trim() === "") {
+      errors.password = "Vui lòng nhập mật khẩu!";
+    }
 
     // if (Object.keys(errors).length === 0) {
     //   // Nếu không có lỗi, chuyển hướng đến "/login"
     //   navigate("/");
     // }
 
-    // setErrors(errors);
-    const data = await dipatch(
-      login({ username, password })
-    ).unwrap();
-    console.log(data);
+    setErrors(errors);
   };
 
   const isValidEmail = (value) => {
@@ -57,8 +61,8 @@ const Login = () => {
         <input
           type="text"
           placeholder="Email"
-          value={username}
-          onChange={(e) => setUserName(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
         />
         {errors.email && <p className="error">{errors.email}</p>}
         <input

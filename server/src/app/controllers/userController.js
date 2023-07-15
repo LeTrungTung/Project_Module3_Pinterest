@@ -75,7 +75,7 @@ class UserController {
     const { username, email, password } = req.body;
 
     // check if the username already exists
-    sql.query('SELECT * FROM users WHERE username = ?', [username], (err, results) => {
+    sql.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
       if (err) {
         console.error('Error handling register:', err);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -120,10 +120,10 @@ class UserController {
 
   async handleLogin(req, res) {
     // get username and password from the body
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     // check if the username exists and compare passwords
-    sql.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
+    sql.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
       if (err) {
         console.error('Error handling login:', err);
         return res.status(500).json({ message: 'Internal Server Error' });

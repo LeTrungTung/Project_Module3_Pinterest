@@ -1,12 +1,13 @@
+.cl-hover {
+  width: 60px;
+  height: 60px;
+}
 .cl-hover:hover {
   background-color: #e1e1e1;
   cursor: pointer;
   border: none;
   background-size: 100px;
-  /* padding: 5px; */
   border-width: 10px;
-  /* width: 80px;
-  height: 80px; */
   border-radius: 50%;
 }
 #header1 {
@@ -46,8 +47,8 @@
 #message,
 #avatar,
 #minilogo {
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   color: grey;
   padding: 10px;
   box-sizing: content-box;
@@ -101,15 +102,25 @@
 
 /* csss menu tại nút mũi tên bên phải */
 .menu-dropdown {
-  display: block;
+  display: flex;
+  flex-direction: column;
   position: absolute;
-  top: 70px;
-  right: 5px;
-  background-color: #ebdbdb !important;
+  top: 45px;
+  right: -1px;
+  background-color: white;
   border: 1px solid #ccc;
   border-radius: 15px;
-  padding: 10px;
+  /* padding-left: 20px; */
   color: black;
+  width: 350px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.hoverto:hover {
+  border: 3px solid rgb(195, 171, 171);
+  background-color: whitesmoke;
+  transition: opacity 0.3s ease;
+  border-radius: 10px;
 }
 
 .open .menu-dropdown {
@@ -126,8 +137,58 @@
 .menu-item.hover {
   background-color: lightgray;
 }
-.logout {
+.profile-logout {
+  text-align: left;
+  padding: 15px;
   font-weight: 500;
-  padding: 10px 15px;
-  cursor: pointer;
+}
+.profile-logout1 {
+  text-align: left;
+  padding: 15px;
+  border-bottom: 1px solid #ccc;
+}
+.email-name1 {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.email-name1 :nth-child(1) {
+  font-weight: 600;
+}
+.email-name1 :nth-child(2) {
+  font-weight: 200;
+}
+.row-avataemail-name1 {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  padding: 8px;
+}
+
+.view-hover-avatar {
+  background-color: black;
+  color: white;
+  font-size: 0.75em;
+  padding: 3px 5px;
+  border: none;
+  border-radius: 8px;
+  position: absolute;
+  top: 50px;
+  left: -50px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.wrap-avata-hover {
+  position: relative;
+}
+
+.wrap-avata-hover:hover .view-hover-avatar {
+  visibility: visible;
+  opacity: 1;
+}
+.avata-of {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }

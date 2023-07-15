@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import "./ModalForm.css";
 import axios from "axios";
 import axiosClient from "../../api/axiosClient";
+import { ImageAPI } from "../../api/Image";
 
 function ModalForm(props) {
   const [imgServer, setImgServer] = useState("");
@@ -37,12 +38,21 @@ function ModalForm(props) {
       .post("/api/v1/upload-image", newImage)
       .then((response) => {
         console.log(response.data);
-        // fetchData();
+        // fetchDataImage();
       })
       .catch((error) => {
         console.error(error);
       });
   };
+
+  // const fetchDataImage = async () => {
+  //   try {
+  //     const response = await ImageAPI.getAllImages();
+  //     // console.log(2222, response);
+  //   } catch (error) {
+  //     console.error("Error retrieving data: ", error);
+  //   }
+  // };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -64,7 +74,7 @@ function ModalForm(props) {
       },
     })
       .then((data) => {
-        console.log(data);
+        console.log("Người tạo thêm ảnh", data);
         setImgServer(data.data.image);
       })
       .catch((err) => {
@@ -94,7 +104,7 @@ function ModalForm(props) {
                 placeholder="Id người dùng tạo ảnh"
                 autoFocus
                 name="userCreateId"
-                // value={dataForm?.titleImage}
+                value={dataForm?.userCreateId}
               />
             </Form.Group>
             {/* <Form.Group

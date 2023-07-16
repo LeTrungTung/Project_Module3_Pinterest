@@ -87,16 +87,16 @@ const DetailImage = () => {
   console.log("userList====>", userList);
 
   // gọi dữ liệu API images
+  const fetchDataImage = async () => {
+    try {
+      const response = await ImageAPI.getAllImages_Comments();
+      console.log(2222, response);
+      setImageList(response.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
   useEffect(() => {
-    const fetchDataImage = async () => {
-      try {
-        const response = await ImageAPI.getAllImages_Comments();
-        console.log(2222, response);
-        setImageList(response.data.data);
-      } catch (error) {
-        console.error("Error retrieving data: ", error);
-      }
-    };
     if (isCall) {
       fetchDataImage();
     }
@@ -230,32 +230,32 @@ const DetailImage = () => {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
-  const userLogin = JSON.parse(localStorage.getItem("user")) || [];
-  // const dispatch = useDispatch();
-  const handleAddComment = () => {
-    // if (comment.trim() !== "") {
-    //   const newComment = {
-    //     avatar:
-    //       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU",
-    //     idUser: userLogin.id,
-    //     idImage: Number(paramsId.id),
-    //     person: userLogin.name,
-    //     note: comment,
-    //     heart: 0,
-    //     timecreate: new Date().toLocaleDateString("en-GB"),
-    //   };
-    // CommentAPI.postComment(newComment)
-    //   .then((response) => {
-    //     console.log("Comment sent successfully:", response.data);
-    //     // update lại dữ liệu từ DB về Redux
-    //     dispatch(handleCallCommentAPI()).unwrap();
-    //     setComment("");
-    //   })
-    //   .catch((error) => {
-    //     // Xử lý khi gửi bình luận gặp lỗi
-    //     console.error("Error sending comment:", error);
-    //   });
-    // }
+  const userLogin =
+    JSON.parse(localStorage.getItem("userLogin")) || [];
+  const handleAddComment = async () => {
+    if (comment.trim() !== "") {
+      const newComment = {
+        imageCommentId: imageChoice[0].idImage,
+        userCommentId: userLogin?.idUser,
+        content: comment,
+        timecreate: new Date().toISOString().split("T")[0],
+      };
+
+      await CommentAPI.postComment(newComment)
+        .then((response) => {
+          console.log("Comment sent successfully:", response.data);
+          // update lại dữ liệu từ DB
+          // ------------------------------------?
+          fetchDataImage();
+          // setIsCall(!isCall);
+          // dispatch(handleCallCommentAPI()).unwrap();
+          setComment("");
+        })
+        .catch((error) => {
+          // Xử lý khi gửi bình luận gặp lỗi
+          console.error("Error sending comment:", error);
+        });
+    }
   };
 
   // đếm số lượng nhận xét của ảnh được chọn
@@ -621,11 +621,19 @@ const DetailImage = () => {
             </div>
           </div>
           <div id="bottom-comment">
-            <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU"
-              alt=""
-              id="avatar-comment"
-            />
+            {userLogin?.avatarUser == null ? (
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNL_ZnOTpXSvhf1UaK7beHey2BX42U6solRA&usqp=CAU"
+                alt="avatar"
+                id="avatar-comment"
+              />
+            ) : (
+              <img
+                src={userLogin?.avatarUser}
+                alt="avatar"
+                id="avatar-comment"
+              />
+            )}
             <input
               type="text"
               placeholder="Thêm nhận xét"

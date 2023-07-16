@@ -13,4 +13,8 @@ export class CommentAPI {
     const url = "api/v1/comment/get-all-comment";
     return axiosClient.get(url);
   }
+  static postComment(params) {
+    const url = `api/v1/comment/add-comment`;
+    return axiosClient.post(url, params);
+  }
 }

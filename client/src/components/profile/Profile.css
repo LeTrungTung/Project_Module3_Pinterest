@@ -35,8 +35,10 @@
 .render-img-create,
 .render-img-save {
   display: flex;
-  column-gap: 10px;
+  /* column-gap: 10px; */
   justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .img-created,
 img-saved {
@@ -49,4 +51,5 @@ img-saved {
   column-gap: 8px;
   font-weight: 600;
   justify-content: center;
+  /* flex-wrap: wrap; */
 }

@@ -28,7 +28,6 @@ const DetailImage = () => {
 
   const numberId = Number(paramsId.id);
   console.log("id từ param", numberId);
-  // const imageList = useSelector((state) => state.infoimage);
   const [imageList, setImageList] = useState([]);
   const [imageChoice, setImageChoice] = useState([]);
   const [userList, setUserList] = useState([]);
@@ -45,6 +44,61 @@ const DetailImage = () => {
   const [isFollow, setIsFollow] = useState(true);
   const [isOperation, setIsOperation] = useState(true);
   const [isChoiceImg, setIsChoiceImg] = useState(true);
+  const [isCallImage, setIsCallImage] = useState(true);
+  const [usersCreateImage, setUsersCreateImage] = useState([]);
+  const [userFollowed, setUserFollowed] = useState([]);
+  const [isCallFollow, setIsCallFollow] = useState(true);
+  const [imageSaved, setImageSaved] = useState([]);
+
+  const userLogin =
+    JSON.parse(localStorage.getItem("userLogin")) || [];
+
+  let idUserCreate = "";
+  let imageStoreSaved = false;
+
+  // gọi dữ liệu bảng images_saved_user
+  const fetchImageSaved = async () => {
+    try {
+      const response = await ImageAPI.getImageSaved();
+      setImageSaved(response.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
+  useEffect(() => {
+    fetchImageSaved();
+  }, []);
+  const checkImgSaved = imageSaved?.filter(
+    (item) =>
+      item.imageSavedId === numberId &&
+      item.userSavedId === userLogin?.idUser
+  );
+  if (checkImgSaved?.length > 0) {
+    imageStoreSaved = true;
+  }
+
+  // gọi dữ liệu API user join image
+  useEffect(() => {
+    const fetchUserJoinImage = async (id) => {
+      try {
+        const response1 = await ImageAPI.getImageCreatedUser(id);
+        // const response2 = await ImageAPI.getUsersSaveImage(id);
+        setUsersCreateImage(response1.data.data);
+
+        // setUsersSaveImage(response2.data.data);
+      } catch (error) {
+        console.error("Error retrieving data: ", error);
+      }
+    };
+    if (isCallImage) {
+      fetchUserJoinImage(numberId);
+    }
+    return () => {
+      setIsCallImage(false);
+    };
+  }, [isCallImage]);
+  idUserCreate = usersCreateImage[0]?.idUser;
+  console.log("idUser======", idUserCreate);
 
   // gọi dữ liệu API lấy image by Id
   useEffect(() => {
@@ -104,6 +158,29 @@ const DetailImage = () => {
       setIsCall(false);
     };
   }, [isCall]);
+
+  useEffect(() => {
+    const fetchUserFollowed = async (id) => {
+      try {
+        const response3 = await FollowAPI.getUserFollowed(id);
+        // const response1 = await FollowAPI.getUserFolloweOther(id);
+        setUserFollowed(response3.data.data);
+        console.log("object6666", response3);
+
+        // setUserFollowOther(response1.data.data);
+      } catch (error) {
+        console.error("Error retrieving data: ", error);
+      }
+    };
+    if (isCallFollow) {
+      fetchUserFollowed(idUserCreate);
+    }
+    return () => {
+      setIsCallFollow(false);
+    };
+  }, [isCallFollow]);
+  console.log("setUserFollowed", userFollowed);
+  console.log("usersCreateImage", usersCreateImage[0]?.idUser);
 
   const commentList = imageList.filter(
     (Comment) => Comment.imageCommentId === numberId
@@ -230,8 +307,7 @@ const DetailImage = () => {
   const handleCommentChange = (e) => {
     setComment(e.target.value);
   };
-  const userLogin =
-    JSON.parse(localStorage.getItem("userLogin")) || [];
+
   const handleAddComment = async () => {
     if (comment.trim() !== "") {
       const newComment = {
@@ -299,20 +375,50 @@ const DetailImage = () => {
   // console.log("IsSaved", isSaved);
 
   const handleSaveImage = async () => {
-    // const newDocumment = {
-    //   idUser: userLogin.id,
-    //   idImage: numberId,
-    //   timecreate: new Date().toLocaleDateString("en-GB"),
-    // };
+    // nếu trạng thái chưa lưu thì lưu ảnh vào bảng images_saved_user tại DB
+    if (!imageStoreSaved) {
+      const newSaveImg = {
+        imageSavedId: numberId,
+        userSavedId: Number(userLogin?.idUser),
+      };
+      await ImageAPI.postImageSaved(newSaveImg)
+        .then((response) => {
+          console.log("Save add successfully:", response.data);
+          fetchImageSaved();
+        })
+        .catch((error) => {
+          console.error("Error save iamge:", error);
+        });
+    } else {
+      const findArrSaveImage = imageSaved.find(
+        (item) =>
+          item.imageSavedId === numberId &&
+          item.userSavedId === userLogin?.idUser
+      );
+      const findIdSaveImage = findArrSaveImage?.idSaveImage;
+      console.log(555555555555, findIdSaveImage);
+      // Xoá ảnh trong images_saved_user tại dòng có idSaveImage=findIdSaveImage
+      const handleDeleteImage = async (id) => {
+        try {
+          await ImageAPI.deleteImageById(id);
+          // Xoá thành công, tiến hành tải lại danh sách blog
+        } catch (error) {
+          console.error("Error deleting blog: ", error);
+        }
+      };
+      handleDeleteImage(findIdSaveImage);
+      fetchImageSaved();
+    }
+
     // nếu ảnh chưa lưu thì add ảnh vào API, ngược lại thì không
-    // if (!isSaved) {
-    //   // const data = await dispatch(
-    //   //   handleCallDocumentAPI(newDocumment)
-    //   // ).unwrap();
-    //   if (data) {
-    //     console.log("tao thanh cong");
-    //   }
-    // }
+    if (!isSaved) {
+      // const data = await dispatch(
+      //   handleCallDocumentAPI(newDocumment)
+      // ).unwrap();
+      // if (data) {
+      //   console.log("tao thanh cong");
+      // }
+    }
   };
 
   // Xử lý biểu tượng cảm xúc hình ảnh
@@ -379,10 +485,10 @@ const DetailImage = () => {
               <div>
                 <button
                   id="id-save"
-                  onClick={() => handleSaveImage(numberId)}
-                  className={isSaved ? "saved" : ""}
+                  onClick={() => handleSaveImage()}
+                  className={imageStoreSaved ? "saved" : ""}
                 >
-                  {isSaved ? "Đã lưu" : "Lưu"}
+                  {imageStoreSaved ? "Đã lưu" : "Lưu"}
                 </button>
               </div>
             </div>
@@ -393,13 +499,13 @@ const DetailImage = () => {
           <div id="userCreate-follow">
             <div id="userCreate-follow-left">
               <div id="avatar-create-img">
-                <img src={imageViewDetail?.avatarUser} alt="" />
+                <img src={usersCreateImage[0]?.avatarUser} alt="" />
               </div>
               <div id="username-count-follow">
                 <span id="sp-username">
-                  {imageViewDetail?.username}
+                  {usersCreateImage[0]?.username}
                 </span>
-                <span>{countFollowUser} người theo dõi</span>
+                <span>{userFollowed[0]?.length} người theo dõi</span>
               </div>
             </div>
             <div id="userCreate-follow-right">

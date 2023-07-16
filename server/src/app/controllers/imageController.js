@@ -110,6 +110,28 @@ class ImageController {
     }
   }
 
+  // lấy API bảng users JOIN bảng images
+  async handleGetUserCreatedImagebyId(req, res) {
+    try {
+      sql.query(
+        `SELECT * FROM users 
+          JOIN images ON images.userCreateId=users.idUser
+          where images.idImage=${req.params.id}`,
+        (err, results) => {
+          if (err) {
+            console.error('Error handling get users-image:', err);
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      console.error('Error handling get users-create-image:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
   // lấy API bảng users JOIN bảng images, images_saved_user
   async handleGetImageSavedByUserid(req, res) {
     try {
@@ -131,6 +153,54 @@ class ImageController {
       console.error('Error handling get users-image-save:', error);
       res.status(500).json({ msg: 'Server error' });
     }
+  }
+
+  // lấy API bảng images_saved_user
+  async handleGetImageSaved(req, res) {
+    try {
+      sql.query(`select * from images_saved_user`, (err, results) => {
+        if (err) {
+          console.error('Error handling get image-save:', err);
+          return res.status(500).json({ msg: 'Server error' });
+        }
+
+        res.status(200).json({ data: results });
+      });
+    } catch (error) {
+      console.error('Error handling get image-save:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
+  // add ảnh lưu vào bảng images_saved_user
+  handlelPostImageOnDocument(req, res) {
+    if (!req.body) return;
+    const newImage = {
+      imageSavedId: req.body.imageSavedId,
+      userSavedId: req.body.userSavedId,
+    };
+    const insertImage = `INSERT INTO images_saved_user(imageSavedId,userSavedId) VALUES (?, ?)`;
+    sql.query(insertImage, [newImage.imageSavedId, newImage.userSavedId], (err, result) => {
+      if (err) {
+        console.log('loi roi');
+        res.status(500).json({ msg: 'Loi server' });
+        return;
+      }
+      res.status(200).json({ msg: 'Thêm mới Comment thành công' });
+    });
+  }
+
+  DeleteImageAtDocument(req, res) {
+    const id = req.params.id;
+    const deleteImage = `DELETE FROM images_saved_user WHERE idSaveImage = ?;`;
+    sql.query(deleteImage, [id], (err, result) => {
+      if (err) {
+        console.log('loi roi');
+        res.status(500).json({ msg: 'Loi server' });
+        return;
+      }
+      res.status(200).json({ message: 'Task deleted successfully' });
+    });
   }
 }
 

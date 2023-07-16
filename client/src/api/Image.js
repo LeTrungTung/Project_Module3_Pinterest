@@ -5,9 +5,21 @@ export class ImageAPI {
     const url = "/api/v1/image/get-image";
     return axiosClient.get(url);
   }
+  static getImageSaved() {
+    const url = "/api/v1/image/get-image-saved";
+    return axiosClient.get(url);
+  }
+  static postImageSaved(params) {
+    const url = "/api/v1/image/add-image-saved";
+    return axiosClient.post(url, params);
+  }
   static getImageById(id) {
     const url = `/api/v1/image/get-image-byId/${id}`;
     return axiosClient.get(url);
+  }
+  static deleteImageById(id) {
+    const url = `/api/v1/image/delete-image-saved/${id}`;
+    return axiosClient.delete(url);
   }
   static getAllImages_Comments() {
     const url = "/api/v1/image/get-image-comment";
@@ -23,6 +35,10 @@ export class ImageAPI {
   }
   static getUsersCreateImage(id) {
     const url = `/api/v1/image/get-image-user/${id}`;
+    return axiosClient.get(url);
+  }
+  static getImageCreatedUser(id) {
+    const url = `/api/v1/image/get-user-create-image/${id}`;
     return axiosClient.get(url);
   }
   static getUsersSaveImage(id) {

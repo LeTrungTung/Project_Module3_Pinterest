@@ -30,9 +30,7 @@ class FollowUserController {
   async handleGetUserFollowed(req, res) {
     try {
       sql.query(
-        `select * from  follows 
-        join users on users.idUser=follows.userFollowedbyId
-        where users.idUser=${req.params.id}`,
+        `select * from follows join users on users.idUser=follows.userFollowedbyId where users.idUser=${req.params.id}`,
         (err, results) => {
           if (err) {
             console.error('Error handling get followed:', err);

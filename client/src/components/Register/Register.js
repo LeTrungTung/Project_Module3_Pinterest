@@ -71,7 +71,7 @@ const Register = () => {
         />
       </div>
       <form className="register-form" onSubmit={handleSubmit}>
-        <h2>Đăng ký</h2>
+        <h2 className="register-form-title">Đăng ký</h2>
         <input
           type="text"
           placeholder="Tên đăng nhập"

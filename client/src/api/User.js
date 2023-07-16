@@ -1,10 +1,11 @@
+import axios from "axios";
 import axiosClient from "./axiosClient";
 
 export class UserAPI {
   // API đăng ký
   static register(param) {
-    const url = "/api/v1/user/register";
-    return axiosClient.post(url, param);
+    const url = "http://localhost:4000/api/v1/user/register";
+    return axios.post(url, param);
   }
   //   API đăng nhập
   static login(param) {

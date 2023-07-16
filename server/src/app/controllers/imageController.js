@@ -17,6 +17,18 @@ class ImageController {
     });
   }
 
+  // lấy images theo Id
+  handleGetImageById(req, res) {
+    sql.query(`SELECT * FROM images where idImage=${req.params.id}`, (err, results) => {
+      if (err) {
+        console.error('Error handling get images:', err);
+        return res.status(500).json({ msg: 'Server error' });
+      }
+      console.log('data', results);
+      res.status(200).json({ data: results });
+    });
+  }
+
   // lấy API bảng images JOIN bảng comment VÀ users
   async handleGetAllImageComment(req, res) {
     try {

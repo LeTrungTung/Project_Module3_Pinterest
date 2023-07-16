@@ -5,4 +5,12 @@ export class FollowAPI {
     const url = "/api/v1/follow/get-follow-user";
     return axiosClient.get(url);
   }
+  static getUserFollowed(id) {
+    const url = `/api/v1/follow/get-userbyid-followed/${id}`;
+    return axiosClient.get(url);
+  }
+  static getUserFolloweOther(id) {
+    const url = `/api/v1/follow/get-userbyid-follow-other/${id}`;
+    return axiosClient.get(url);
+  }
 }

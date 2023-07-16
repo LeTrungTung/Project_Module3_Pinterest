@@ -15,30 +15,35 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = await dipatch(login({ email, password })).unwrap();
-    console.log(data);
-    if (data.data.accessToken) {
-      navigate("/home");
-    }
-
     // Kiểm tra dữ liệu và xử lý đăng ký
     const errors = {};
 
     if (email.trim() === "") {
       errors.email = "Vui lòng nhập email!";
-    } else if (!isValidEmail(email)) {
+    }
+    if (!isValidEmail(email)) {
       errors.email = "Email không đúng định dạng!";
     }
 
     if (password.trim() === "") {
       errors.password = "Vui lòng nhập mật khẩu!";
     }
+    if (password !== "" && email !== "") {
+      const data = await dipatch(login({ email, password })).unwrap();
 
-    // if (Object.keys(errors).length === 0) {
-    //   // Nếu không có lỗi, chuyển hướng đến "/login"
-    //   navigate("/");
-    // }
+      if (
+        password !== "" &&
+        email !== "" &&
+        data?.data?.accessToken == null
+      ) {
+        errors.password = "Mật khẩu và password không khớp!";
+      }
 
+      console.log(data);
+      if (data?.data?.accessToken) {
+        navigate("/home");
+      }
+    }
     setErrors(errors);
   };
 
@@ -52,19 +57,20 @@ const Login = () => {
     <div className="login-content">
       <div className="nature-image">
         <img
-          src="https://thuthuatphanmem.vn/uploads/2018/08/21/hinh-nen-thien-nhien-phong-canh-dep-4_043141001.jpg"
+          src="https://cdn.pixabay.com/photo/2016/05/24/16/48/mountains-1412683_640.png"
           alt="image"
         />
       </div>
       <form className="login-form" onSubmit={handleSubmit}>
-        <h2>Đăng nhập</h2>
+        <h2 className="title-login"> Chào mừng bạn đến</h2>
+        <h1 className="title1-login">Pinterest</h1>
         <input
           type="text"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        {errors.email && <p className="error">{errors.email}</p>}
+        {errors.email && <p className="error-log">{errors.email}</p>}
         <input
           type="password"
           placeholder="Mật khẩu"
@@ -72,7 +78,7 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         {errors.password && (
-          <p className="error">{errors.password}</p>
+          <p className="error-log ed1">{errors.password}</p>
         )}
 
         <button type="submit">Đăng nhập</button>

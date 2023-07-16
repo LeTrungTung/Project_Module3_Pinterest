@@ -5,6 +5,7 @@ import { IoIosArrowDown } from "react-icons/io";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { BsFillCaretRightSquareFill } from "react-icons/bs";
 import { BsSuitHeart } from "react-icons/bs";
+import { MdOutlineSend } from "react-icons/md";
 import { BiSolidHappyHeartEyes } from "react-icons/bi";
 import { MdTagFaces } from "react-icons/md";
 import { CgHeart } from "react-icons/cg";
@@ -29,6 +30,7 @@ const DetailImage = () => {
   console.log("id từ param", numberId);
   // const imageList = useSelector((state) => state.infoimage);
   const [imageList, setImageList] = useState([]);
+  const [imageChoice, setImageChoice] = useState([]);
   const [userList, setUserList] = useState([]);
   // const [commentList, setCommentList] = useState([]);
   const [loveCommentList, setLoveCommentList] = useState([]);
@@ -42,6 +44,27 @@ const DetailImage = () => {
   const [isComment, setIsComment] = useState(true);
   const [isFollow, setIsFollow] = useState(true);
   const [isOperation, setIsOperation] = useState(true);
+  const [isChoiceImg, setIsChoiceImg] = useState(true);
+
+  // gọi dữ liệu API lấy image by Id
+  useEffect(() => {
+    const fetchImageById = async (id) => {
+      try {
+        const response = await ImageAPI.getImageById(id);
+        setImageChoice(response.data.data);
+      } catch (error) {
+        console.error("Error retrieving data: ", error);
+      }
+    };
+    if (isChoiceImg) {
+      fetchImageById(numberId);
+    }
+    return () => {
+      setIsChoiceImg(false);
+    };
+  }, [isChoiceImg]);
+
+  console.log("Image đang chọn====>", imageChoice);
 
   // gọi dữ liệu API users
   useEffect(() => {
@@ -340,8 +363,8 @@ const DetailImage = () => {
     <Container id="wrap-detail">
       <div id="left-area">
         <img
-          src={imageViewDetail?.linkImage}
-          alt=""
+          src={imageChoice[0]?.linkImage}
+          alt="detail image"
           id="img-detail"
         />
       </div>
@@ -397,94 +420,98 @@ const DetailImage = () => {
               <IoIosArrowDown id="id-arrowdown" />
             </h5>
           </p>
-          {commentList &&
-            commentList.map((comment, index) => {
-              return (
-                <div className="show-comment" key={index}>
-                  <div className="avatar-comment">
-                    <img src={comment.avatarUser} alt="" />
-                  </div>
-                  <div className="view-comment">
-                    <div>
-                      <b>{comment.username}</b>
-                      <span className="content-comment">
-                        {comment.content}
-                      </span>
+          <div className="wrapper-comments">
+            {commentList &&
+              commentList.map((comment, index) => {
+                return (
+                  <div className="show-comment" key={index}>
+                    <div className="avatar-comment">
+                      <img src={comment.avatarUser} alt="" />
                     </div>
-                    <div className="action-comment">
-                      <span>{comment.timecreate.slice(0, 10)}</span>
-                      <span className="ans-comment">Trả lời</span>
-                      <span className="ans-heart">
-                        {/* đếm số lượt yêu thích */}
-                        {loveByCommentList[index] > 0 ? (
-                          <AiFillHeart
-                            id="id-heart"
-                            onClick={() =>
-                              handleHeartClick(comment.idComment)
-                            }
-                            className={
-                              loveByCommentList[index] > 0
-                                ? "active"
-                                : ""
-                            }
-                          />
-                        ) : (
-                          <AiOutlineHeart
-                            id="id-heart"
-                            onClick={() =>
-                              handleHeartClick(comment.idComment)
-                            }
-                          />
-                        )}
+                    <div className="view-comment">
+                      <div>
+                        <b>{comment.username}</b>
+                        <span className="content-comment">
+                          {comment.content}
+                        </span>
+                      </div>
+                      <div className="action-comment">
+                        <span>{comment.timecreate.slice(0, 10)}</span>
+                        <span className="ans-comment">Trả lời</span>
+                        <span className="ans-heart">
+                          {/* đếm số lượt yêu thích */}
+                          {loveByCommentList[index] > 0 ? (
+                            <AiFillHeart
+                              id="id-heart"
+                              onClick={() =>
+                                handleHeartClick(comment.idComment)
+                              }
+                              className={
+                                loveByCommentList[index] > 0
+                                  ? "active"
+                                  : ""
+                              }
+                            />
+                          ) : (
+                            <AiOutlineHeart
+                              id="id-heart"
+                              onClick={() =>
+                                handleHeartClick(comment.idComment)
+                              }
+                            />
+                          )}
 
-                        {/* ------------------------------------------------------- */}
-                        <div id="wrap-love-comment">
-                          <span id="count-love-coment">
-                            {" "}
-                            {loveByCommentList[index] > 0
-                              ? loveByCommentList[index]
-                              : ""}
-                          </span>
-                          <div className="show-user-love">
-                            {loveByCommentList[index] > 0 &&
-                              arrUserloveComment[index]?.map(
-                                (userlove) => {
-                                  return (
-                                    <div
-                                      className="row-mini-love"
-                                      key={userlove}
-                                    >
-                                      <div>
-                                        <span>
-                                          <img
-                                            src={userlove.avatarUser}
-                                            alt=""
-                                          />
-                                        </span>
-                                        <span className="name-uselove">
-                                          {userlove.username}
-                                        </span>
+                          {/* ------------------------------------------------------- */}
+                          <div id="wrap-love-comment">
+                            <span id="count-love-coment">
+                              {" "}
+                              {loveByCommentList[index] > 0
+                                ? loveByCommentList[index]
+                                : ""}
+                            </span>
+                            <div className="show-user-love">
+                              {loveByCommentList[index] > 0 &&
+                                arrUserloveComment[index]?.map(
+                                  (userlove) => {
+                                    return (
+                                      <div
+                                        className="row-mini-love"
+                                        key={userlove}
+                                      >
+                                        <div>
+                                          <span>
+                                            <img
+                                              src={
+                                                userlove.avatarUser
+                                              }
+                                              alt=""
+                                            />
+                                          </span>
+                                          <span className="name-uselove">
+                                            {userlove.username}
+                                          </span>
+                                        </div>
+                                        <div>
+                                          <AiFillHeart className="heart-userlove" />
+                                        </div>
                                       </div>
-                                      <div>
-                                        <AiFillHeart className="heart-userlove" />
-                                      </div>
-                                    </div>
-                                  );
-                                }
-                              )}
+                                    );
+                                  }
+                                )}
+                            </div>
                           </div>
-                        </div>
 
-                        {/* ------------------------------------------------------- */}
-                      </span>
-                      <span>
-                        <BsThreeDots id="id-dots" />
-                      </span>
+                          {/* ------------------------------------------------------- */}
+                        </span>
+                        <span>
+                          <BsThreeDots id="id-dots" />
+                        </span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+          </div>
         </div>
 
         <div id="right-area-bottom">
@@ -510,61 +537,63 @@ const DetailImage = () => {
                     {countLikeLoveImage > 0 ? countLikeLoveImage : ""}
                   </span>
                   {showRenderUserOperation && (
-                    <div
-                      ref={renderUserOperationRef}
-                      className="render-user-operation"
-                    >
-                      <p>
-                        <BiSolidHappyHeartEyes className="biso-heart" />
-                        <MdTagFaces className="tag-face" />
-                      </p>
-                      <div className="row-render-user">
-                        {arrLoveByImage?.map((userLoveImage) => {
-                          return (
-                            <div
-                              key={userLoveImage.idImage}
-                              className="wrap-row"
-                            >
-                              <div className="avatar-name">
-                                <span>
-                                  <img
-                                    src={userLoveImage.avatarUser}
-                                    alt=""
-                                  />
-                                </span>
-                                <span className="cl-nameuser">
-                                  {userLoveImage.username}
-                                </span>
+                    <div className="overlay">
+                      <div
+                        ref={renderUserOperationRef}
+                        className="render-user-operation"
+                      >
+                        <p>
+                          <BiSolidHappyHeartEyes className="biso-heart" />
+                          <MdTagFaces className="tag-face" />
+                        </p>
+                        <div className="row-render-user">
+                          {arrLoveByImage?.map((userLoveImage) => {
+                            return (
+                              <div
+                                key={userLoveImage.idImage}
+                                className="wrap-row"
+                              >
+                                <div className="avatar-name">
+                                  <span>
+                                    <img
+                                      src={userLoveImage.avatarUser}
+                                      alt=""
+                                    />
+                                  </span>
+                                  <span className="cl-nameuser">
+                                    {userLoveImage.username}
+                                  </span>
+                                </div>
+                                <div>
+                                  <BiSolidHappyHeartEyes className="biso-heart1" />
+                                </div>
                               </div>
-                              <div>
-                                <BiSolidHappyHeartEyes className="biso-heart1" />
+                            );
+                          })}
+                          {arrLikeByImage?.map((userLikeImage) => {
+                            return (
+                              <div
+                                key={userLikeImage.idImage}
+                                className="wrap-row"
+                              >
+                                <div className="avatar-name">
+                                  <span>
+                                    <img
+                                      src={userLikeImage.avatarUser}
+                                      alt=""
+                                    />
+                                  </span>
+                                  <span className="cl-nameuser">
+                                    {userLikeImage.username}
+                                  </span>
+                                </div>
+                                <div>
+                                  <MdTagFaces className="biso-heart2" />
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })}
-                        {arrLikeByImage?.map((userLikeImage) => {
-                          return (
-                            <div
-                              key={userLikeImage.idImage}
-                              className="wrap-row"
-                            >
-                              <div className="avatar-name">
-                                <span>
-                                  <img
-                                    src={userLikeImage.avatarUser}
-                                    alt=""
-                                  />
-                                </span>
-                                <span className="cl-nameuser">
-                                  {userLikeImage.username}
-                                </span>
-                              </div>
-                              <div>
-                                <MdTagFaces className="biso-heart2" />
-                              </div>
-                            </div>
-                          );
-                        })}
+                            );
+                          })}
+                        </div>
                       </div>
                     </div>
                   )}
@@ -608,7 +637,7 @@ const DetailImage = () => {
               style={{ border: "none", backgroundColor: "white" }}
               onClick={handleAddComment}
             >
-              <BsFillCaretRightSquareFill id="btn-add-comment" />
+              <MdOutlineSend id="btn-add-comment" />
             </button>
           </div>
         </div>

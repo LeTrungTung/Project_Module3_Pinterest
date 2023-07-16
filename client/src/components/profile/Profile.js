@@ -2,14 +2,18 @@ import React, { useEffect, useState } from "react";
 import "./Profile.css";
 import { useLocation } from "react-router-dom";
 import { ImageAPI } from "../../api/Image";
+import { FollowAPI } from "../../api/Follow";
 
 const Profile = () => {
   const [usersCreateImage, setUsersCreateImage] = useState();
   const [usersSaveImage, setUsersSaveImage] = useState();
+  const [userFollowed, setUserFollowed] = useState();
+  const [userFollowOther, setUserFollowOther] = useState();
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
 
   const [isCallImage, setIsCallImage] = useState(true);
+  const [isCallFollow, setIsCallFollow] = useState(true);
   // gọi dữ liệu API user join image
   useEffect(() => {
     const fetchUserJoinImage = async (id) => {
@@ -30,6 +34,26 @@ const Profile = () => {
     };
   }, [isCallImage]);
 
+  useEffect(() => {
+    const fetchUserFollowed = async (id) => {
+      try {
+        const response = await FollowAPI.getUserFollowed(id);
+        const response1 = await FollowAPI.getUserFolloweOther(id);
+        setUserFollowed(response.data.data);
+        setUserFollowOther(response1.data.data);
+      } catch (error) {
+        console.error("Error retrieving data: ", error);
+      }
+    };
+    if (isCallFollow) {
+      fetchUserFollowed(userLogin?.idUser);
+    }
+    return () => {
+      setIsCallFollow(false);
+    };
+  }, [isCallFollow]);
+  //   console.log("object33", userFollowOther);
+
   // const location = useLocation();
   const [isCreatedActive, setIsCreatedActive] = useState(false);
 
@@ -41,6 +65,7 @@ const Profile = () => {
       setIsCreatedActive(false);
     }
   };
+
   return (
     <div>
       {userLogin?.avatarUser == null ? (
@@ -59,9 +84,12 @@ const Profile = () => {
       )}
       <h1 className="username-document">{userLogin?.username}</h1>
       <p className="email-document">{userLogin?.email}</p>
-      <p>
-        <span>????</span>
-        <span style={{ marginLeft: "10px" }}>Người theo dõi</span>
+      <p className="counts-follow">
+        <span>{userFollowed?.length}</span>
+        <span>Người theo dõi</span>
+        <span>|</span>
+        <span> {userFollowOther?.length}</span>
+        <span>Người đang theo dõi</span>
       </p>
       <p className="choice-create">
         <span

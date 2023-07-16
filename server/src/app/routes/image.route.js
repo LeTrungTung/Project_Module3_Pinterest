@@ -6,6 +6,7 @@ const router = express.Router();
 // router.post('/image', ImageController.handleAddImage);
 
 router.get('/get-image', ImageController.handleGetAllImage);
+router.get('/get-image-byId/:id', ImageController.handleGetImageById);
 router.get('/get-image-comment', ImageController.handleGetAllImageComment);
 router.get('/get-image-love', ImageController.handleGetLoveImage);
 router.get('/get-image-like', ImageController.handleGetLikeImage);

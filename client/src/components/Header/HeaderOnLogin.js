@@ -84,7 +84,7 @@ const HeaderOnLogin = ({ onSearchImage }) => {
             className="cl-hover"
             id="minilogo"
           />
-          <button id="btn-mainpage" onClick={() => navigate("/")}>
+          <button id="btn-mainpage" onClick={() => navigate("/home")}>
             Trang chủ
           </button>
           <button id="btn-create" onClick={handleAddImage}>
@@ -125,7 +125,12 @@ const HeaderOnLogin = ({ onSearchImage }) => {
               <span>Tin nhắn</span>
             </div>
           </div>
-          <div className="wrap-avata-hover">
+          <div
+            className="wrap-avata-hover"
+            onClick={() => {
+              navigate("/profile");
+            }}
+          >
             {userLogin?.avatarUser == null ? (
               <img
                 src="https://cdn.onlinewebfonts.com/svg/img_542942.png"

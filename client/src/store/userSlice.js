@@ -3,10 +3,10 @@ import { UserAPI } from "../api/User";
 export const login = createAsyncThunk("login", async (userData) => {
   try {
     const response = await UserAPI.login(userData);
-    console.log(response.data.data);
+    console.log(response?.data);
     localStorage.setItem(
       "userLogin",
-      JSON.stringify(response.data.data)
+      JSON.stringify(response?.data?.data)
     );
     localStorage.setItem("token", response.data.accessToken);
     return response;
@@ -26,9 +26,9 @@ const userSlice = createSlice({
   reducers: {},
   extraReducers: {
     [login.fulfilled]: (state, action) => {
-      console.log(action.payload);
-      state.data = action.payload.data.data;
-      state.token = action.payload.data.accessToken;
+      console.log("xem action >>>>>", action.payload);
+      state.data = action.payload?.data?.data;
+      state.token = action.payload?.data?.data?.accessToken;
       state.isLoggedIn = true;
     },
   },

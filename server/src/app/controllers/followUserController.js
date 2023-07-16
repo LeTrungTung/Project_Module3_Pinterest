@@ -26,6 +26,49 @@ class FollowUserController {
       res.status(500).json({ msg: 'Server error' });
     }
   }
+  // lấy users được theo dõi
+  async handleGetUserFollowed(req, res) {
+    try {
+      sql.query(
+        `select * from  follows 
+        join users on users.idUser=follows.userFollowedbyId
+        where users.idUser=${req.params.id}`,
+        (err, results) => {
+          if (err) {
+            console.error('Error handling get followed:', err);
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      console.error('Error handling get followed:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
+  // lấy users đang theo dõi người khác
+  async handleGetUserFollowOther(req, res) {
+    try {
+      sql.query(
+        `select * from  follows 
+        join users on users.idUser=follows.userFollowOtherId
+        where users.idUser=${req.params.id}`,
+        (err, results) => {
+          if (err) {
+            console.error('Error handling get followed:', err);
+            return res.status(500).json({ msg: 'Server error' });
+          }
+
+          res.status(200).json({ data: results });
+        }
+      );
+    } catch (error) {
+      console.error('Error handling get followed:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
 }
 
 module.exports = new FollowUserController();

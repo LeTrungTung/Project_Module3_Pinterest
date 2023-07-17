@@ -2,21 +2,42 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ModalForm.css";
 import axios from "axios";
 import axiosClient from "../../api/axiosClient";
 import { ImageAPI } from "../../api/Image";
+import { useNavigate } from "react-router-dom";
 
 function ModalForm(props) {
+  const userLogin =
+    JSON.parse(localStorage.getItem("userLogin")) || [];
   const [imgServer, setImgServer] = useState("");
+  const [allImages, setAllImages] = useState([]);
   const [dataForm, setDataForm] = useState({
-    userCreateId: "", //cập nhật thêm id của user tạo ảnh
+    userCreateId: userLogin?.idUser,
     titleImage: "",
     description: "",
     sourceImage: "",
     categoryImage: "",
   });
+
+  const navigate = useNavigate();
+  // gọi dữ liệu bảng images
+  const fetchAllImages = async () => {
+    try {
+      const response = await ImageAPI.getAllImages();
+      setAllImages(response.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
+  useEffect(() => {
+    fetchAllImages();
+  }, []);
+
+  const idNewImage =
+    Number(allImages[allImages.length - 1]?.idImage) + 1;
 
   const handleClose = () => props.setShow(false);
   const handleFormSubmit = (e) => {
@@ -27,7 +48,7 @@ function ModalForm(props) {
     // tạo đường dẫn Post ảnh lên
 
     const newImage = {
-      userCreateId: 4,
+      userCreateId: userLogin?.idUser,
       linkImage: dataFromPost.linkImage,
       categoryImage: dataFromPost.categoryImage,
       titleImage: dataFromPost.titleImage,
@@ -43,16 +64,9 @@ function ModalForm(props) {
       .catch((error) => {
         console.error(error);
       });
+    fetchAllImages();
+    navigate(`/detail/${idNewImage}`);
   };
-
-  // const fetchDataImage = async () => {
-  //   try {
-  //     const response = await ImageAPI.getAllImages();
-  //     // console.log(2222, response);
-  //   } catch (error) {
-  //     console.error("Error retrieving data: ", error);
-  //   }
-  // };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -86,7 +100,9 @@ function ModalForm(props) {
     <>
       <Modal show={props.show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Tạo thêm hình ảnh</Modal.Title>
+          <Modal.Title id="modal-title">
+            Tạo thêm hình ảnh
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form
@@ -95,7 +111,7 @@ function ModalForm(props) {
             // method="post"
             // action="/api/v1/image-upload"
           >
-            <Form.Group
+            {/* <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlInput3"
             >
@@ -106,7 +122,7 @@ function ModalForm(props) {
                 name="userCreateId"
                 value={dataForm?.userCreateId}
               />
-            </Form.Group>
+            </Form.Group> */}
             {/* <Form.Group
               className="mb-3"
               controlId="exampleForm.ControlInput2"
@@ -186,15 +202,11 @@ function ModalForm(props) {
               />
             </Form.Group>
             <div className="ctr-form">
-              <Button
-                variant="primary"
-                type="submit"
-                style={{ marginLeft: "130px" }}
-              >
+              <Button variant="primary" type="submit">
                 Lưu và tạo mới
               </Button>
               <Button
-                style={{ marginLeft: "30px" }}
+                className="btn-close-modal"
                 variant="secondary"
                 onClick={handleClose}
               >

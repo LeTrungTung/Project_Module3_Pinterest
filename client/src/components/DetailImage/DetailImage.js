@@ -230,11 +230,11 @@ const DetailImage = () => {
   const fetchLoveImage = async () => {
     try {
       const response1 = await ImageAPI.getAllImages_Love();
-      // const response2 = await ImageAPI.getAllImages_Like();
+      const response2 = await ImageAPI.getAllImages_Like();
       console.log("Love Image====>", response1.data.data);
-      // console.log("Like Image====>", response2.data.data);
+      console.log("Like Image====>", response2.data.data);
       setLoveImageList(response1.data.data);
-      // setLikeImageList(response2.data.data);
+      setLikeImageList(response2.data.data);
     } catch (error) {
       console.error("Error retrieving data: ", error);
     }
@@ -485,7 +485,13 @@ const DetailImage = () => {
         item.imageOperationId == numberId &&
         item.userLoveImageId == userLogin?.idUser
     );
+    let findArrLikeImage = operationImage?.filter(
+      (item) =>
+        item.imageOperationId == numberId &&
+        item.userLikeImageId == userLogin?.idUser
+    );
     console.log("findArrLoveImage", findArrLoveImage);
+    console.log("findArrLikeImage", findArrLikeImage);
     if (icon == "heart") {
       setChooseIcon(<BiSolidHappyHeartEyes />);
       if (findArrLoveImage?.length > 0) {
@@ -526,7 +532,44 @@ const DetailImage = () => {
         fetchOperationImage();
       }
     } else {
+      // Xử lý khi chọn biểu tượng cảm ơn
       setChooseIcon(<MdTagFaces />);
+
+      if (findArrLikeImage?.length > 0) {
+        // xoá like Image
+        const DeleteLikeImage = async (id) => {
+          try {
+            const response = await ImageAPI.deleteLoveImage(id);
+            fetchLoveImage();
+          } catch (error) {
+            console.error("Error retrieving data: ", error);
+          }
+        };
+        DeleteLikeImage(findArrLikeImage[0]?.idOperationImage);
+        fetchOperationImage();
+      }
+      //  nếu chưa có thì add love image vào
+      else {
+        const newLikeImage = {
+          imageOperationId: numberId,
+          userLikeImageId: userLogin?.idUser,
+          userLoveImageId: null,
+          userSavedImageId: null,
+        };
+        const handlePostLikeImage = async (newLikeImage) => {
+          try {
+            const response2 = await ImageAPI.postLoveImage(
+              newLikeImage
+            );
+            console.log("response Post", response2.data.data);
+            fetchLoveImage();
+          } catch (error) {
+            console.error("Error retrieving data: ", error);
+          }
+        };
+        handlePostLikeImage(newLikeImage);
+        fetchOperationImage();
+      }
     }
   };
 

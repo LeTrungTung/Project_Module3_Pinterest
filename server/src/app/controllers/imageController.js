@@ -251,7 +251,7 @@ class ImageController {
           res.status(500).json({ msg: 'Loi server' });
           return;
         }
-        res.status(200).json({ msg: 'Thêm mới love Image thành công' });
+        res.status(200).json({ msg: 'Thêm mới love/like Image thành công' });
       }
     );
   }

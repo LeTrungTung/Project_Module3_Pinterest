@@ -16,6 +16,9 @@ router.get('/get-image-like', ImageController.handleGetLikeImage);
 router.get('/get-image-user/:id', ImageController.handleGetImageCreatedByUserid);
 router.get('/get-user-create-image/:id', ImageController.handleGetUserCreatedImagebyId);
 router.get('/get-image-user-save/:id', ImageController.handleGetImageSavedByUserid);
+router.get('/get-operation-image', ImageController.handleGetOperationImage);
+router.delete('/delete-operation-image/:id', ImageController.DeleteLikeImage);
+router.post('/add-love-image', ImageController.handlelPostLoveImage);
 
 router.get('/', (req, res) => {
   res.json('Ok');

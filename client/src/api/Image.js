@@ -45,4 +45,16 @@ export class ImageAPI {
     const url = `/api/v1/image/get-image-user-save/${id}`;
     return axiosClient.get(url);
   }
+  static getOperationImage(id) {
+    const url = `/api/v1/image/get-operation-image`;
+    return axiosClient.get(url);
+  }
+  static deleteLoveImage(id) {
+    const url = `/api/v1/image/delete-operation-image/${id}`;
+    return axiosClient.delete(url);
+  }
+  static postLoveImage(params) {
+    const url = "/api/v1/image/add-love-image";
+    return axiosClient.post(url, params);
+  }
 }

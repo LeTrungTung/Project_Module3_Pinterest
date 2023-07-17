@@ -11,23 +11,16 @@ import { MdTagFaces } from "react-icons/md";
 import { CgHeart } from "react-icons/cg";
 import "./DetailImage.css";
 import { useLocation, useParams } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-// import CommentAPI from "../../api/Comment";
-// import { handleCallCommentAPI } from "../../redux/reducer/CommentSlice";
 import { ClassNames } from "@emotion/react";
-// import DocumentAPI from "../../api/Document";
 import { ImageAPI } from "../../api/Image";
 import { UserAPI } from "../../api/User";
 import { CommentAPI } from "../../api/Comment";
 import { FollowAPI } from "../../api/Follow";
-// import { handleCallDocumentAPI } from "../../redux/reducer/DocumentSlice";
 
 const DetailImage = () => {
   const paramsId = useParams();
 
   const numberId = Number(paramsId.id);
-  console.log("id từ param", numberId);
   const [imageList, setImageList] = useState([]);
   const [imageChoice, setImageChoice] = useState([]);
   const [userList, setUserList] = useState([]);
@@ -50,6 +43,7 @@ const DetailImage = () => {
   const [isCallFollow, setIsCallFollow] = useState(true);
   const [imageSaved, setImageSaved] = useState([]);
   const [likeLoveComment, setLikeLoveComment] = useState([]);
+  const [operationImage, setOperationImage] = useState([]);
 
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
@@ -233,20 +227,20 @@ const DetailImage = () => {
     };
   }, [isFollow]);
 
+  const fetchLoveImage = async () => {
+    try {
+      const response1 = await ImageAPI.getAllImages_Love();
+      // const response2 = await ImageAPI.getAllImages_Like();
+      console.log("Love Image====>", response1.data.data);
+      // console.log("Like Image====>", response2.data.data);
+      setLoveImageList(response1.data.data);
+      // setLikeImageList(response2.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
   // gọi dữ liệu API Image lấy số lượt LOVE, LIKE ảnh
   useEffect(() => {
-    const fetchLoveImage = async () => {
-      try {
-        const response1 = await ImageAPI.getAllImages_Love();
-        const response2 = await ImageAPI.getAllImages_Like();
-        console.log("Love Image====>", response1.data.data);
-        console.log("Like Image====>", response2.data.data);
-        setLoveImageList(response1.data.data);
-        setLikeImageList(response2.data.data);
-      } catch (error) {
-        console.error("Error retrieving data: ", error);
-      }
-    };
     if (isOperation) {
       fetchLoveImage();
     }
@@ -466,11 +460,71 @@ const DetailImage = () => {
   const handleMouseOut = () => {
     setShowIcons(false);
   };
-  const handleIconClick = (icon) => {
+  // lấy dư liệu bảng operation image
+  const fetchOperationImage = async () => {
+    try {
+      const response = await ImageAPI.getOperationImage();
+      console.log(
+        "getOperationImage successfully:",
+        response.data.data
+      );
+      setOperationImage(response.data.data);
+    } catch (error) {
+      console.error("Error get OperationImage:", error);
+    }
+  };
+  useEffect(() => {
+    fetchOperationImage();
+  }, []);
+
+  const handleIconClick = async (icon) => {
     // Xử lý khi người dùng chọn biểu tượng
-    console.log("Selected icon:", icon);
+    console.log("operationImage:", operationImage);
+    let findArrLoveImage = operationImage?.filter(
+      (item) =>
+        item.imageOperationId == numberId &&
+        item.userLoveImageId == userLogin?.idUser
+    );
+    console.log("findArrLoveImage", findArrLoveImage);
     if (icon == "heart") {
       setChooseIcon(<BiSolidHappyHeartEyes />);
+      if (findArrLoveImage?.length > 0) {
+        // xoá love Image
+        const DeleteLoveImage = async (id) => {
+          try {
+            const response = await ImageAPI.deleteLoveImage(id);
+            // fetchOperationImage();
+            fetchLoveImage();
+          } catch (error) {
+            console.error("Error retrieving data: ", error);
+          }
+        };
+        DeleteLoveImage(findArrLoveImage[0]?.idOperationImage);
+        fetchOperationImage();
+      }
+      //  nếu chưa có thì add love image vào
+      else {
+        const newLoveImage = {
+          imageOperationId: numberId,
+          userLikeImageId: null,
+          userLoveImageId: userLogin?.idUser,
+          userSavedImageId: null,
+        };
+        // console.log(1010, newLikeComment);
+        const handlePostLoveImage = async (newLoveImage) => {
+          try {
+            const response2 = await ImageAPI.postLoveImage(
+              newLoveImage
+            );
+            console.log("response Post", response2.data.data);
+            fetchLoveImage();
+          } catch (error) {
+            console.error("Error retrieving data: ", error);
+          }
+        };
+        handlePostLoveImage(newLoveImage);
+        fetchOperationImage();
+      }
     } else {
       setChooseIcon(<MdTagFaces />);
     }

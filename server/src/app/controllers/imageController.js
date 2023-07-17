@@ -202,6 +202,59 @@ class ImageController {
       res.status(200).json({ message: 'Task deleted successfully' });
     });
   }
+
+  // lấy API bảng operation_image
+  async handleGetOperationImage(req, res) {
+    try {
+      sql.query(`select * from operation_image`, (err, results) => {
+        if (err) {
+          console.error('Error handling get operation_image:', err);
+          return res.status(500).json({ msg: 'Server error' });
+        }
+
+        res.status(200).json({ data: results });
+      });
+    } catch (error) {
+      console.error('Error handling get operation_image:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
+  DeleteLikeImage(req, res) {
+    const id = req.params.id;
+    const deleteLoveImage = `DELETE FROM operation_image WHERE idOperationImage = ?`;
+    sql.query(deleteLoveImage, [id], (err, result) => {
+      if (err) {
+        console.log('loi roi');
+        res.status(500).json({ msg: 'Loi server' });
+        return;
+      }
+      res.status(200).json({ message: 'Love Image deleted successfully' });
+    });
+  }
+
+  handlelPostLoveImage(req, res) {
+    if (!req.body) return;
+    const newImage = {
+      imageOperationId: req.body.imageOperationId,
+      userLikeImageId: req.body.userLikeImageId,
+      userLoveImageId: req.body.userLoveImageId,
+      userSavedImageId: req.body.userSavedImageId,
+    };
+    const insertLoveImage = `INSERT INTO operation_image (imageOperationId,userLikeImageId,userLoveImageId,userSavedImageId) VALUES (?, ?, ?, ?)`;
+    sql.query(
+      insertLoveImage,
+      [newImage.imageOperationId, newImage.userLikeImageId, newImage.userLoveImageId, newImage.userSavedImageId],
+      (err, result) => {
+        if (err) {
+          console.log('loi roi');
+          res.status(500).json({ msg: 'Loi server' });
+          return;
+        }
+        res.status(200).json({ msg: 'Thêm mới love Image thành công' });
+      }
+    );
+  }
 }
 
 module.exports = new ImageController();

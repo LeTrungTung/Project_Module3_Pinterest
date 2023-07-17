@@ -17,4 +17,16 @@ export class CommentAPI {
     const url = `api/v1/comment/add-comment`;
     return axiosClient.post(url, params);
   }
+  static getLikeLoveComments() {
+    const url = `api/v1/comment/get-like-love-comment`;
+    return axiosClient.get(url);
+  }
+  static deleteLikeAtComment(id) {
+    const url = `api/v1/comment/delete-like-comment/${id}`;
+    return axiosClient.delete(url);
+  }
+  static postLikeAtComment(params) {
+    const url = `api/v1/comment/add-like-comment`;
+    return axiosClient.post(url, params);
+  }
 }

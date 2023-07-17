@@ -96,6 +96,59 @@ class CommentController {
       }
     );
   }
+
+  // lấy API TỪ bảng like_love_comment
+  async handleAllLikeLoveComment(req, res) {
+    try {
+      sql.query(`select * from like_love_comment`, (err, results) => {
+        if (err) {
+          console.error('Error handling get like love comments:', err);
+          return res.status(500).json({ msg: 'Server error' });
+        }
+
+        res.status(200).json({ data: results });
+      });
+    } catch (error) {
+      console.error('Error handling get lke love users:', error);
+      res.status(500).json({ msg: 'Server error' });
+    }
+  }
+
+  DeleteLikeComment(req, res) {
+    const id = req.params.id;
+    const deleteImage = `DELETE FROM like_love_comment WHERE idLikeLoveComment = ?;`;
+    sql.query(deleteImage, [id], (err, result) => {
+      if (err) {
+        console.log('loi roi');
+        res.status(500).json({ msg: 'Loi server' });
+        return;
+      }
+      res.status(200).json({ message: 'Like comment deleted successfully' });
+    });
+  }
+
+  handlelPostLikeComment(req, res) {
+    if (!req.body) return;
+    const newLikeComment = {
+      commentLikeLoveId: req.body.commentLikeLoveId,
+      userLikeCommentId: req.body.userLikeCommentId,
+      userLoveCommentId: req.body.userLoveCommentId,
+    };
+    // console.log('newComment', newComment);
+    const insertLikeComment = `INSERT INTO like_love_comment (commentLikeLoveId,userLikeCommentId,userLoveCommentId) VALUES (?, ?, ?)`;
+    sql.query(
+      insertLikeComment,
+      [newLikeComment.commentLikeLoveId, newLikeComment.userLikeCommentId, newLikeComment.userLoveCommentId],
+      (err, result) => {
+        if (err) {
+          console.log('loi roi');
+          res.status(500).json({ msg: 'Loi server' });
+          return;
+        }
+        res.status(200).json({ msg: 'Thêm mới Like comment thành công' });
+      }
+    );
+  }
 }
 
 module.exports = new CommentController();

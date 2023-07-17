@@ -49,6 +49,7 @@ const DetailImage = () => {
   const [userFollowed, setUserFollowed] = useState([]);
   const [isCallFollow, setIsCallFollow] = useState(true);
   const [imageSaved, setImageSaved] = useState([]);
+  const [likeLoveComment, setLikeLoveComment] = useState([]);
 
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
@@ -188,22 +189,23 @@ const DetailImage = () => {
   console.log("commentList", commentList);
 
   // gọi dữ liệu API Comment lấy số lượt yêu thích "Love", "Like"
+  const fetchDataComment = async () => {
+    try {
+      const response1 = await CommentAPI.getLoveComments();
+      const response2 = await CommentAPI.getLikeComments();
+      const response3 = await CommentAPI.getAllComments();
+      console.log("loveComment====>", response1.data.data);
+      console.log("likeComment====>", response2.data.data);
+      console.log("AllComment====>", response3.data.data);
+      setLoveCommentList(response1.data.data);
+      setLikeCommentList(response2.data.data);
+      setAllCommentList(response3.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
   useEffect(() => {
-    const fetchDataComment = async () => {
-      try {
-        const response1 = await CommentAPI.getLoveComments();
-        const response2 = await CommentAPI.getLikeComments();
-        const response3 = await CommentAPI.getAllComments();
-        console.log("loveComment====>", response1.data.data);
-        console.log("likeComment====>", response2.data.data);
-        console.log("AllComment====>", response3.data.data);
-        setLoveCommentList(response1.data.data);
-        setLikeCommentList(response2.data.data);
-        setAllCommentList(response3.data.data);
-      } catch (error) {
-        console.error("Error retrieving data: ", error);
-      }
-    };
+    fetchDataComment();
     if (isComment) {
       fetchDataComment();
     }
@@ -345,34 +347,68 @@ const DetailImage = () => {
     const commentHeart = imageList?.find(
       (imageJoinComment) => imageJoinComment.idComment === id
     );
-    console.log("comment", commentHeart);
+    console.log("comment click ====>", commentHeart);
+    console.log("Id comment ====>", id);
 
-    //   await CommentAPI.updateLike({
-    //     ...commentHeart,
-    //     heart: commentHeart.heart + 1,
-    //   }).then(() => dispatch(handleCallCommentAPI()).unwrap());
+    // gọi bảng like_love_comment về
+    const fetchLikeLoveComment = async () => {
+      try {
+        const response = await CommentAPI.getLikeLoveComments();
+        setLikeLoveComment(response.data.data);
+      } catch (error) {
+        console.error("Error retrieving data: ", error);
+      }
+    };
+    // useEffect(() => {
+    //   fetchLikeLoveComment();
+    // }, []);
+    fetchLikeLoveComment();
+    console.log(66666, likeLoveComment);
+    const findComment = likeLoveComment?.filter(
+      (item) =>
+        item.commentLikeLoveId === id &&
+        item.userLoveCommentId === userLogin?.idUser
+    );
+    console.log(777, findComment);
+    if (findComment?.length > 0) {
+      // console.log(888, "đã thả tim rồi thì xoá tim đi");
+      const handleDeleteLikeAtComment = async (id) => {
+        try {
+          await CommentAPI.deleteLikeAtComment(id);
+          // Xoá thành công, tiến hành tải lại danh sách blog
+        } catch (error) {
+          console.error("Error deleting blog: ", error);
+        }
+      };
+      const idDeleteLike = findComment[0]?.idLikeLoveComment;
+      console.log(99, idDeleteLike);
+      handleDeleteLikeAtComment(idDeleteLike);
+      fetchDataComment();
+    } else {
+      // console.log(888, "chưa thả tim thì add tim vào");
+
+      const newLikeComment = {
+        commentLikeLoveId: id,
+        userLikeCommentId: null,
+        userLoveCommentId: userLogin?.idUser,
+      };
+      console.log(1010, newLikeComment);
+      await CommentAPI.postLikeAtComment(newLikeComment)
+        .then((response) => {
+          console.log(
+            "like comment add successfully:",
+            response.data
+          );
+          fetchDataComment();
+        })
+        .catch((error) => {
+          // Xử lý khi gửi bình luận gặp lỗi
+          console.error("Error sending comment:", error);
+        });
+    }
   };
-
-  // handle save
-
-  // const documentList = useSelector((state) => state.documents);
-  // console.log("listDC", documentList);
-
   // kiểm tra ảnh đang xem đã được lưu chưa
   let isSaved = false;
-  // const dataSavedImage = documentList.filter(
-  //   (document) => document.idUser === userLogin.id
-  // );
-  // console.log(66, dataSavedImage);
-  // if (dataSavedImage.length > 0) {
-  //   const checkdata = dataSavedImage.find(
-  //     (item) => +item.idImage === +numberId
-  //   );
-  //   console.log("check", checkdata);
-  //   isSaved =
-  //     checkdata !== undefined && checkdata !== null ? true : false;
-  // }
-  // console.log("IsSaved", isSaved);
 
   const handleSaveImage = async () => {
     // nếu trạng thái chưa lưu thì lưu ảnh vào bảng images_saved_user tại DB

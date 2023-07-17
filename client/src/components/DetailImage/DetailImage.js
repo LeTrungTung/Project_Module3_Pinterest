@@ -44,7 +44,8 @@ const DetailImage = () => {
   const [imageSaved, setImageSaved] = useState([]);
   const [likeLoveComment, setLikeLoveComment] = useState([]);
   const [operationImage, setOperationImage] = useState([]);
-
+  const [userFollowOthers, setUserFollowOthers] = useState([]);
+  const [statusFollow, setStatusFollow] = useState(false);
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
 
@@ -154,19 +155,19 @@ const DetailImage = () => {
     };
   }, [isCall]);
 
-  useEffect(() => {
-    const fetchUserFollowed = async (id) => {
-      try {
-        const response3 = await FollowAPI.getUserFollowed(id);
-        // const response1 = await FollowAPI.getUserFolloweOther(id);
-        setUserFollowed(response3.data.data);
-        console.log("object6666", response3);
+  const fetchUserFollowed = async (id) => {
+    try {
+      const response3 = await FollowAPI.getUserFollowed(id);
+      // const response1 = await FollowAPI.getUserFolloweOther(id);
+      setUserFollowed(response3.data.data);
+      console.log("object6666", response3);
 
-        // setUserFollowOther(response1.data.data);
-      } catch (error) {
-        console.error("Error retrieving data: ", error);
-      }
-    };
+      // setUserFollowOther(response1.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
+  useEffect(() => {
     if (isCallFollow) {
       fetchUserFollowed(idUserCreate);
     }
@@ -598,6 +599,58 @@ const DetailImage = () => {
     setShowRenderUserOperation(true);
   };
 
+  const fetchUserFollowOther = async (id) => {
+    try {
+      const response = await FollowAPI.getUserFolloweOther(id);
+      setUserFollowOthers(response.data.data);
+    } catch (error) {
+      console.error("Error retrieving data: ", error);
+    }
+  };
+  useEffect(() => {
+    // fetchUserFollowOther(usersCreateImage[0]?.idUser);
+    fetchUserFollowOther(userLogin?.idUser);
+  }, []);
+  const handleFollowUserCreatedImg = () => {
+    // console.log("77", userFollowOthers);
+    const ListFollowedbyUserLogin = userFollowOthers.filter(
+      (item) => item.userFollowedbyId === usersCreateImage[0]?.idUser
+    );
+    console.log("222222", ListFollowedbyUserLogin);
+    if (ListFollowedbyUserLogin.length > 0) {
+      // alert("Bạn đã theo dõi người này rồi!");
+      setStatusFollow(!statusFollow);
+
+      // Bỏ theo dõi
+      const deleteFollowed = async (id) => {
+        try {
+          const response = await FollowAPI.deleteFollowed(id);
+        } catch (error) {
+          console.error("Error retrieving data: ", error);
+        }
+      };
+      deleteFollowed(ListFollowedbyUserLogin[0].idFollow);
+      fetchUserFollowOther(userLogin?.idUser);
+    }
+    // add theo theo dõi vào bảng follows
+    else {
+      const newFollow = {
+        userFollowedbyId: usersCreateImage[0]?.idUser,
+        userFollowOtherId: Number(userLogin?.idUser),
+      };
+      const handleAddFolowed = async (newFollow) => {
+        try {
+          const response = await FollowAPI.addFollowed(newFollow);
+        } catch (error) {
+          console.error("Error retrieving data: ", error);
+        }
+      };
+      handleAddFolowed(newFollow);
+      fetchUserFollowOther(userLogin?.idUser);
+      setStatusFollow(!statusFollow);
+    }
+  };
+
   return (
     <Container id="wrap-detail">
       <div id="left-area">
@@ -642,7 +695,13 @@ const DetailImage = () => {
               </div>
             </div>
             <div id="userCreate-follow-right">
-              <button id="btn-follow">Theo dõi</button>
+              <button
+                id="btn-follow"
+                onClick={handleFollowUserCreatedImg}
+                className={!statusFollow ? "saved" : ""}
+              >
+                {statusFollow ? "Theo dõi" : "Đã theo dõi"}
+              </button>
             </div>
           </div>
           <p id="id-source-img">

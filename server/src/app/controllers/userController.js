@@ -172,6 +172,34 @@ class UserController {
       res.status(500).json({ msg: 'Server error' });
     }
   }
+
+  async handleEditUser(req, res) {
+    console.log('Ktra body', req.params.id);
+    const userName = req.body.username;
+    let query = `UPDATE users SET username=? WHERE idUser=${req.params.id}`;
+    // const nameEdit = usernameUpdate
+    // };
+
+    sql.query(query, [userName], (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ msg: err });
+        return;
+      }
+      res.status(200).json({ msg: 'Sửa username thành công' });
+    });
+  }
+
+  handleGetUserById(req, res) {
+    sql.query(`SELECT * FROM users where idUser=${req.params.id}`, (err, results) => {
+      if (err) {
+        console.error('Error handling get users:', err);
+        return res.status(500).json({ msg: 'Server error' });
+      }
+      console.log('data', results);
+      res.status(200).json({ data: results });
+    });
+  }
 }
 
 module.exports = new UserController();

@@ -65,7 +65,8 @@ function ModalForm(props) {
         console.error(error);
       });
     fetchAllImages();
-    navigate(`/detail/${idNewImage}`);
+    props.setShow(false);
+    // navigate(`/detail/${idNewImage}`);
   };
 
   const handleInputChange = (event) => {

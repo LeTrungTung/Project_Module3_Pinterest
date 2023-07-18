@@ -3,17 +3,35 @@ import "./Profile.css";
 import { useLocation } from "react-router-dom";
 import { ImageAPI } from "../../api/Image";
 import { FollowAPI } from "../../api/Follow";
+import { UserAPI } from "../../api/User";
 
 const Profile = () => {
   const [usersCreateImage, setUsersCreateImage] = useState();
   const [usersSaveImage, setUsersSaveImage] = useState();
   const [userFollowed, setUserFollowed] = useState();
   const [userFollowOther, setUserFollowOther] = useState();
+  const [listUser, setListUser] = useState([]);
+
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
 
   const [isCallImage, setIsCallImage] = useState(true);
   const [isCallFollow, setIsCallFollow] = useState(true);
+  const idUser = userLogin?.idUser;
+  const fetchDataUserById = async (id) => {
+    try {
+      const response = await UserAPI.getUserById(id);
+      console.log("get user successfully:", response.data.data);
+      setListUser(response.data.data);
+    } catch (error) {
+      console.error("Error get User:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDataUserById(idUser);
+  }, []);
+  console.log("ktra list user", listUser);
+
   // gọi dữ liệu API user join image
   useEffect(() => {
     const fetchUserJoinImage = async (id) => {
@@ -27,7 +45,7 @@ const Profile = () => {
       }
     };
     if (isCallImage) {
-      fetchUserJoinImage(userLogin?.idUser);
+      fetchUserJoinImage(idUser);
     }
     return () => {
       setIsCallImage(false);
@@ -46,7 +64,7 @@ const Profile = () => {
       }
     };
     if (isCallFollow) {
-      fetchUserFollowed(userLogin?.idUser);
+      fetchUserFollowed(idUser);
     }
     return () => {
       setIsCallFollow(false);
@@ -68,7 +86,7 @@ const Profile = () => {
 
   return (
     <div>
-      {userLogin?.avatarUser == null ? (
+      {listUser[0]?.avatarUser == null ? (
         <img
           src="https://cdn.onlinewebfonts.com/svg/img_542942.png"
           alt="avatar"
@@ -76,14 +94,14 @@ const Profile = () => {
         />
       ) : (
         <img
-          src={userLogin?.avatarUser}
+          src={listUser[0].avatarUser}
           alt="avatar"
           className="cl-hover"
           id="avatar-document"
         />
       )}
-      <h1 className="username-document">{userLogin?.username}</h1>
-      <p className="email-document">{userLogin?.email}</p>
+      <h1 className="username-document">{listUser[0].username}</h1>
+      <p className="email-document">{listUser[0].email}</p>
       <p className="counts-follow">
         <span>{userFollowed?.length}</span>
         <span>Người theo dõi</span>

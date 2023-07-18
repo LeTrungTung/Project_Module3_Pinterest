@@ -121,6 +121,7 @@
   background-color: whitesmoke;
   transition: opacity 0.3s ease;
   border-radius: 10px;
+  cursor: pointer;
 }
 
 .open .menu-dropdown {

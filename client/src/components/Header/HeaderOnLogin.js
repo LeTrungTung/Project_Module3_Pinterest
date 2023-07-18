@@ -13,19 +13,43 @@ import "./HeaderOnLogin.css";
 import ModalForm from "./ModalForm";
 // import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ModalFormRename from "./ModalFormRename";
+import { UserAPI } from "../../api/User";
 
 const HeaderOnLogin = ({ onSearchImage }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showModalRename, setShowModalRename] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchImage, setSearchImage] = useState("");
+  // const [showModalRename, setShowModalRename] = useState(false);
+  const [currentName, setCurrentName] = useState("");
+  const [newName, setNewName] = useState("");
 
-  const menuRef = useRef();
+  const [listUser, setListUser] = useState([]);
 
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
-  console.log("user login", userLogin?.avatarUser);
+
+  const [isCallImage, setIsCallImage] = useState(true);
+  const [isCallFollow, setIsCallFollow] = useState(true);
+  const idUser = userLogin?.idUser;
+  const fetchDataUserById = async (id) => {
+    try {
+      const response = await UserAPI.getUserById(id);
+      console.log("get user successfully:", response.data.data);
+      setListUser(response.data.data);
+    } catch (error) {
+      console.error("Error get User:", error);
+    }
+  };
+  useEffect(() => {
+    fetchDataUserById(idUser);
+  }, []);
+  console.log("ktra list user", listUser);
+
+  const menuRef = useRef();
+
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   // Logout
   const handleLogout = () => {
@@ -71,11 +95,22 @@ const HeaderOnLogin = ({ onSearchImage }) => {
   // Lấy danh sách ảnh từ Redux store
   // const infoimage = useSelector((state) => state.infoimage);
 
+  const handleRenameUser = () => {
+    setShowModalRename(true);
+  };
+
   return (
     <Container fluid id="header1">
       {showModal && (
         <ModalForm show={showModal} setShow={setShowModal} />
       )}
+      {showModalRename && (
+        <ModalFormRename
+          show={showModalRename}
+          setShow={setShowModalRename}
+        />
+      )}
+
       <Row>
         <Col lg="3" md="4" xs="6" id="left-header1">
           <img
@@ -131,7 +166,7 @@ const HeaderOnLogin = ({ onSearchImage }) => {
               navigate("/profile");
             }}
           >
-            {userLogin?.avatarUser == null ? (
+            {listUser[0]?.avatarUser == null ? (
               <img
                 src="https://cdn.onlinewebfonts.com/svg/img_542942.png"
                 alt="avatar"
@@ -140,7 +175,7 @@ const HeaderOnLogin = ({ onSearchImage }) => {
               />
             ) : (
               <img
-                src={userLogin?.avatarUser}
+                src={listUser[0]?.avatarUser}
                 alt="avatar"
                 className="cl-hover"
                 id="avatar"
@@ -165,7 +200,7 @@ const HeaderOnLogin = ({ onSearchImage }) => {
                   Đang đăng nhập
                 </span>
                 <div className="row-avataemail-name1 hoverto">
-                  {userLogin?.avatarUser == null ? (
+                  {listUser[0]?.avatarUser == null ? (
                     <img
                       src="https://png.pngtree.com/png-clipart/20190705/original/pngtree-vector-business-man-icon-png-image_4239598.jpg"
                       alt="avata"
@@ -173,16 +208,23 @@ const HeaderOnLogin = ({ onSearchImage }) => {
                     />
                   ) : (
                     <img
-                      src={userLogin?.avatarUser}
+                      src={listUser[0]?.avatarUser}
                       alt="avata"
                       className="avata-of"
                     />
                   )}
                   <div className="email-name1">
-                    <span>{userLogin?.username}</span>
-                    <span>{userLogin?.email}</span>
+                    <span>{listUser[0]?.username}</span>
+                    <span>{listUser[0]?.email}</span>
                   </div>
                 </div>
+                <span
+                  className="profile-logout hoverto"
+                  onClick={handleRenameUser}
+                >
+                  Đổi tên tài khoản
+                </span>
+
                 <span
                   className="profile-logout hoverto"
                   onClick={handleLogout}

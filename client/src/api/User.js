@@ -17,4 +17,12 @@ export class UserAPI {
     const url = "api/v1/user/get-user";
     return axiosClient.get(url);
   }
+  static editUsername(id, param) {
+    const url = `api/v1/user/edit-user/${id}`;
+    return axiosClient.patch(url, param);
+  }
+  static getUserById(id) {
+    const url = `/api/v1/user/get-user-byid/${id}`;
+    return axiosClient.get(url);
+  }
 }

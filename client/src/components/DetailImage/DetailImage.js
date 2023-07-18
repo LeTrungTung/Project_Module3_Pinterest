@@ -45,7 +45,7 @@ const DetailImage = () => {
   const [likeLoveComment, setLikeLoveComment] = useState([]);
   const [operationImage, setOperationImage] = useState([]);
   const [userFollowOthers, setUserFollowOthers] = useState([]);
-  const [statusFollow, setStatusFollow] = useState(false);
+  const [statusFollow, setStatusFollow] = useState();
   const userLogin =
     JSON.parse(localStorage.getItem("userLogin")) || [];
 
@@ -698,9 +698,9 @@ const DetailImage = () => {
               <button
                 id="btn-follow"
                 onClick={handleFollowUserCreatedImg}
-                className={!statusFollow ? "saved" : ""}
+                className={statusFollow ? "saved" : ""}
               >
-                {statusFollow ? "Theo dõi" : "Đã theo dõi"}
+                {statusFollow !== true ? "Theo dõi" : "Đã theo dõi"}
               </button>
             </div>
           </div>
@@ -724,7 +724,19 @@ const DetailImage = () => {
                 return (
                   <div className="show-comment" key={index}>
                     <div className="avatar-comment">
-                      <img src={comment.avatarUser} alt="" />
+                      {userLogin?.avatarUser == null ? (
+                        <img
+                          src="https://cdn.onlinewebfonts.com/svg/img_542942.png"
+                          alt="avatar"
+                        />
+                      ) : (
+                        <img
+                          src={userLogin?.avatarUser}
+                          alt="avatar"
+                        />
+                      )}
+
+                      {/* <img src={comment.avatarUser} alt="" /> */}
                     </div>
                     <div className="view-comment">
                       <div>
